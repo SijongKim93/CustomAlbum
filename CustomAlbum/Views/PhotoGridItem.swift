@@ -9,37 +9,23 @@ import SwiftUI
 
 struct PhotoGridItem: View {
     let photo: Photo
+    let isSelected: Bool
     
     var body: some View {
-        VStack {
-            Image(uiImage: photo.image)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 150, height: 150)
-                .clipped()
-            
-            VStack(alignment: .leading, spacing: 4) {
-                if let date = photo.date {
-                    Text(DateFormatter.mediumDateShortTime.string(from: date))
-                        .font(.caption)
-                }
-                if let location = photo.location {
-                    Text(location)
-                        .font(.caption)
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 4)
-        }
-        .background(Color.gray.opacity(0.1))
-        .cornerRadius(8)
+        Image(uiImage: photo.image)
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0)
+            .clipped()
+            .opacity(isSelected ? 0 : 1)
     }
 }
 
-struct PhotoGridItem_Previews: PreviewProvider {
-    static var previews: some View {
-        PhotoGridItem(photo: Photo(id: "1", image: UIImage(systemName: "photo")!, date: Date(), location: "Seoul, Korea"))
-            .previewLayout(.sizeThatFits)
-            .padding()
-    }
-}
+//struct PhotoGridItem_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PhotoGridItem(photo: Photo(id: "1", image: UIImage(systemName: "photo")!, date: Date(), location: "Seoul, Korea"))
+//            .frame(width: 100, height: 100)
+//            .previewLayout(.sizeThatFits)
+//            .padding()
+//    }
+//}
