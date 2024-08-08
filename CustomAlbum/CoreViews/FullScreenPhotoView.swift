@@ -11,6 +11,7 @@ struct FullScreenPhotoView: View {
     let photo: Photo
     @Binding var isPresented: Bool
     var animation: Namespace.ID
+    @State private var dragOffset: CGSize = .zero
     
     var body: some View {
         ZStack {
@@ -20,6 +21,24 @@ struct FullScreenPhotoView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .matchedGeometryEffect(id: photo.id, in: animation)
+                .offset(dragOffset)
+                .gesture(
+                    DragGesture()
+                        .onChanged({ gesture in
+                            dragOffset = gesture.translation
+                        })
+                        .onEnded({ gesture in
+                            if abs(gesture.translation.height) > 100 {
+                                withAnimation(.spring()) {
+                                    isPresented = false
+                                }
+                            } else {
+                                withAnimation(.spring()) {
+                                    dragOffset = .zero
+                                }
+                            }
+                        })
+                )
                 .edgesIgnoringSafeArea(.all)
             
             VStack {

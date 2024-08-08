@@ -22,22 +22,30 @@ class AlbumViewModel: ObservableObject {
     }
     
     func checkAndRequestPermission() {
-        permissionManager.checkPhotoLibraryPermission()
-        if !isAuthorized {
-            permissionManager.requestPhotoLibraryPermission()
+        Task {
+            await permissionManager.checkPhotoLibraryPermission()
+            if !isAuthorized {
+                await permissionManager.requestPhotoLibraryPermission()
+            }
         }
     }
     
     func requestPermission() {
-        permissionManager.requestPhotoLibraryPermission()
+        Task {
+            await permissionManager.requestPhotoLibraryPermission()
+        }
     }
     
     private func setupBindings() {
         permissionManager.$isAuthorized
             .sink { [weak self] isAuthorized in
-                self?.isAuthorized = isAuthorized
+                guard let self = self else { return }
+                self.isAuthorized = isAuthorized
                 if isAuthorized {
-                    self?.fetchPhotos()
+                    Task {
+                        [weak self] in
+                        await self?.fetchPhotos()
+                    }
                 }
             }
             .store(in: &cancellables)
@@ -47,7 +55,7 @@ class AlbumViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    private func fetchPhotos() {
-        photoLibraryManager.fetchPhotos()
+    private func fetchPhotos() async {
+        await photoLibraryManager.fetchPhotos()
     }
 }
