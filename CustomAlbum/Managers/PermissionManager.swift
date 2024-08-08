@@ -11,19 +11,17 @@ import Photos
 class PermissionManager: ObservableObject {
     @Published var isAuthorized = false
     
-    func checkPhotoLibraryPermission() {
+    func checkPhotoLibraryPermission() async {
         let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
-        updateAuthorizationStatus(status)
+        await updateAuthorizationStatus(status)
     }
     
-    func requestPhotoLibraryPermission() {
-        PHPhotoLibrary.requestAuthorization { [weak self] status in
-            DispatchQueue.main.async {
-                self?.updateAuthorizationStatus(status)
-            }
-        }
+    func requestPhotoLibraryPermission() async {
+        let status = await PHPhotoLibrary.requestAuthorization(for: .readWrite)
+        await updateAuthorizationStatus(status)
     }
     
+    @MainActor
     private func updateAuthorizationStatus(_ status: PHAuthorizationStatus) {
         switch status {
         case .authorized, .limited:
