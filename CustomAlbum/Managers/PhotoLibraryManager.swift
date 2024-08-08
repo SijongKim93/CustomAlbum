@@ -19,45 +19,64 @@ class PhotoLibraryManager: ObservableObject {
         let assets = PHAsset.fetchAssets(with: .image, options: fetchOptions)
         
         DispatchQueue.global(qos: .background).async {
+            let group = DispatchGroup()
+            var newPhotos: [Photo] = []
+            
             assets.enumerateObjects { (asset, _, _) in
-                let options = PHImageRequestOptions()
-                options.isSynchronous = true
-                
-                PHImageManager.default().requestImage(for: asset, targetSize: CGSize(width: 200, height: 200), contentMode: .aspectFill, options: options) { image, _ in
-                    if let image = image {
-                        let date = asset.creationDate
-                        let location = self.getLocationString(from: asset)
-                        
-                        DispatchQueue.main.async {
-                            self.photos.append(Photo(id: asset.localIdentifier, image: image, date: date, location: location))
-                        }
+                group.enter()
+                self.getPhotoInfo(for: asset) { photo in
+                    if let photo = photo {
+                        newPhotos.append(photo)
                     }
+                    group.leave()
                 }
+            }
+            
+            group.notify(queue: .main) {
+                self.photos = newPhotos.sorted { $0.date ?? Date.distantPast > $1.date ?? Date.distantPast}
             }
         }
     }
     
-    private func getLocationString(from asset: PHAsset) -> String? {
-        guard let location = asset.location else { return nil }
+    private func getPhotoInfo(for asset: PHAsset, completion: @escaping (Photo?) -> Void) {
+        let options = PHImageRequestOptions()
+        options.isSynchronous = false
+        options.deliveryMode = .highQualityFormat
+        options.resizeMode = .exact
+        
+        let scale = UIScreen.main.scale
+        let screenWidth = UIScreen.main.bounds.width
+        let targetSize = CGSize(width: screenWidth * scale / 3, height: screenWidth * scale / 3)
+        
+        PHImageManager.default().requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFill, options: options) { image, _ in
+            guard let image = image else {
+                completion(nil)
+                return
+            }
+            
+            self.getLocationString(from: asset) { location in
+                let photo = Photo(id: asset.localIdentifier, image: image, date: asset.creationDate, location: location)
+                completion(photo)
+            }
+        }
+    }
+    
+    private func getLocationString(from asset: PHAsset, completion: @escaping (String?) -> Void) {
+        guard let location = asset.location else {
+            completion(nil)
+            return
+        }
         
         let geocoder = CLGeocoder()
-        var locationString: String?
-        
-        let semaphore = DispatchSemaphore(value: 0)
-        
         geocoder.reverseGeocodeLocation(location) { placemarks, error in
             if let placemark = placemarks?.first {
                 let city = placemark.locality ?? ""
                 let country = placemark.country ?? ""
-                locationString = "\(city), \(country)".trimmingCharacters(in: .whitespaces)
-                if locationString?.isEmpty == true {
-                    locationString = nil
-                }
+                let locationString = "\(city), \(country)".trimmingCharacters(in: .whitespaces)
+                completion(locationString.isEmpty ? nil : locationString)
+            } else {
+                completion(nil)
             }
-            semaphore.signal()
         }
-        
-        semaphore.wait()
-        return locationString
     }
 }
