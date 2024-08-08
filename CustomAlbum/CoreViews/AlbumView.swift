@@ -5,14 +5,13 @@
 //  Created by 김시종 on 8/7/24.
 //
 
-import Foundation
 import SwiftUI
 
 struct AlbumView: View {
     @StateObject private var viewModel = AlbumViewModel()
     @Namespace private var animation
-    @State private var selectedPhoto: Photo?
-    
+    @State private var selectedPhotoIndex: Int?
+
     let columns = [
         GridItem(.flexible(), spacing: 1),
         GridItem(.flexible(), spacing: 1),
@@ -27,24 +26,28 @@ struct AlbumView: View {
                         if viewModel.photos.isEmpty {
                             Text("사진이 없습니다.")
                         } else {
-                            PhotoGrid(photos: viewModel.photos, columns: columns, selectedPhoto: $selectedPhoto, animation: animation)
+                            PhotoGrid(photos: viewModel.photos, columns: columns, selectedPhotoIndex: $selectedPhotoIndex, animation: animation)
                         }
                     } else {
                         DeniedView(requestPermission: viewModel.checkAndRequestPermission)
                     }
                 }
-                .navigationTitle(selectedPhoto == nil ? "My Album" : "")
+                .navigationTitle(selectedPhotoIndex == nil ? "My Album" : "")
                 .background(Color.primary.colorInvert())
                 
-                if let photo = selectedPhoto {
-                    FullScreenPhotoView(photo: photo, isPresented: Binding(
-                        get: { selectedPhoto != nil },
-                        set: { if !$0 {
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                                selectedPhoto = nil
-                            }
-                        }}
-                    ), animation: animation)
+                if let index = selectedPhotoIndex {
+                    FullScreenPhotoView(
+                        viewModel: FullScreenPhotoViewModel(photos: viewModel.photos, initialIndex: index),
+                        isPresented: Binding(
+                            get: { selectedPhotoIndex != nil },
+                            set: { if !$0 {
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                                    selectedPhotoIndex = nil
+                                }
+                            }}
+                        ),
+                        animation: animation
+                    )
                     .zIndex(1)
                 }
             }
@@ -60,3 +63,4 @@ struct AlbumView_Previews: PreviewProvider {
         AlbumView()
     }
 }
+
