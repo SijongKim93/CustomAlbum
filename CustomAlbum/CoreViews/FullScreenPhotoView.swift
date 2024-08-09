@@ -8,23 +8,45 @@
 import SwiftUI
 
 struct FullScreenPhotoView: View {
-    @ObservedObject var viewModel: FullScreenPhotoViewModel
+    @StateObject var viewModel: FullScreenPhotoViewModel
+    @StateObject private var zoomHandler = PhotoZoomHandler()
     var animation: Namespace.ID
 
     var body: some View {
         ZStack {
             VStack {
-                Spacer()
-
-                Image(uiImage: viewModel.currentPhoto.image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.black)
-                    .matchedGeometryEffect(id: viewModel.currentPhoto.id, in: animation)
-
-                Spacer()
-
+                GeometryReader { geometry in
+                    let topOffset = viewModel.showInfoView ? -geometry.size.height * 0.15 : 0
+                    
+                    Image(uiImage: viewModel.currentPhoto.image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geometry.size.width, height: geometry.size.height * 0.65)
+                        .clipped()
+                        .background(Color.black)
+                        .matchedGeometryEffect(id: viewModel.currentPhoto.id, in: animation)
+                        .offset(y: topOffset)
+                        .scaleEffect(zoomHandler.currentScale)
+                        .gesture(
+                            MagnificationGesture()
+                                .onChanged { value in
+                                    zoomHandler.magnificationChanged(value)
+                                }
+                                .onEnded { value in
+                                    zoomHandler.magnificationEnded(value)
+                                }
+                        )
+                        .animation(.easeInOut(duration: 0.4), value: viewModel.showInfoView)
+                        .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                }
+                
+                
+                if viewModel.showInfoView {
+                    InfoView(photo: viewModel.currentPhoto)
+                        .transition(.move(edge: .bottom))
+                        .animation(.easeInOut(duration: 0.4), value: viewModel.showInfoView)
+                }
+                
                 PhotoBottomView(
                     onShare: {
                         viewModel.sharePhoto()
@@ -47,9 +69,9 @@ struct FullScreenPhotoView: View {
                 Image(systemName: "star.fill")
                     .resizable()
                     .frame(width: 100, height: 100)
-                    .foregroundColor(.yellow)
-                    .transition(.scale)
-                    .animation(.easeInOut(duration: 0.8), value: viewModel.showFavoriteAnimation)
+                    .foregroundColor(.pink)
+                    .transition(.scale.combined(with: .opacity))
+                    .animation(.spring(response: 0.5, dampingFraction: 0.1), value: viewModel.showFavoriteAnimation)
             }
         }
         .background(Color.black.edgesIgnoringSafeArea(.all))

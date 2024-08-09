@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct FavoritesView: View {
-    @StateObject private var viewModel = FullScreenPhotoViewModel(photos: AlbumViewModel().photos, initialIndex: 0)
+    @StateObject private var viewModel = FavoritesViewModel()
+    @Namespace private var animation
+    @State private var selectedPhotoIndex: Int?
     
     private let columns = [
         GridItem(.flexible(), spacing: 1),
@@ -18,17 +21,22 @@ struct FavoritesView: View {
     
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVGrid(columns: columns, spacing: 1) {
-                    ForEach(viewModel.photos.filter { $0.isFavorite }) { photo in
-                        Image(uiImage: photo.image)
-                            .resizable()
-                            .aspectRatio(1, contentMode: .fit)
-                    }
+            PhotoGrid(
+                photos: viewModel.favoritePhotos,
+                columns: columns,
+                selectedPhotoIndex: $selectedPhotoIndex,
+                animation: animation,
+                imageForPhoto: { photo in
+                    photo.image
                 }
-                .padding(1)
-            }
+            )
             .navigationTitle("Favorites")
+        }
+        .onAppear {
+            viewModel.loadFavoritePhotos()
+        }
+        .onChange(of: selectedPhotoIndex) { _ in
+            viewModel.refreshFavoritePhotos()
         }
     }
 }
