@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct FullScreenPhotoView: View {
     @ObservedObject var viewModel: FullScreenPhotoViewModel
     @Binding var isPresented: Bool

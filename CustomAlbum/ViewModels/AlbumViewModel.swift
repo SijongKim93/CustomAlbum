@@ -36,21 +36,38 @@ class AlbumViewModel: ObservableObject {
         }
     }
     
+    func fetchPhotosIfAuthorized() {
+        if isAuthorized {
+            Task {
+                await fetchPhotos()
+            }
+        }
+    }
+    
+    func loadMoreIfNeeded(currentItem: Photo?) {
+        guard let item = currentItem, !photos.isEmpty else { return }
+        let thresholdIndex = photos.index(photos.endIndex, offsetBy: -5)
+        if photos.firstIndex(where: { $0.id == item.id }) == thresholdIndex {
+            Task {
+                await fetchPhotos()
+            }
+        }
+    }
+    
     private func setupBindings() {
         permissionManager.$isAuthorized
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] isAuthorized in
                 guard let self = self else { return }
                 self.isAuthorized = isAuthorized
                 if isAuthorized {
-                    Task {
-                        [weak self] in
-                        await self?.fetchPhotos()
-                    }
+                    self.fetchPhotosIfAuthorized()
                 }
             }
             .store(in: &cancellables)
         
         photoLibraryManager.$photos
+            .receive(on: DispatchQueue.main)
             .assign(to: \.photos, on: self)
             .store(in: &cancellables)
     }

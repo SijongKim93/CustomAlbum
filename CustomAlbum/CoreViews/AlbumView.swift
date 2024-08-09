@@ -12,7 +12,7 @@ struct AlbumView: View {
     @Namespace private var animation
     @State private var selectedPhotoIndex: Int?
 
-    let columns = [
+    private let columns = [
         GridItem(.flexible(), spacing: 1),
         GridItem(.flexible(), spacing: 1),
         GridItem(.flexible(), spacing: 1)
@@ -26,7 +26,15 @@ struct AlbumView: View {
                         if viewModel.photos.isEmpty {
                             Text("사진이 없습니다.")
                         } else {
-                            PhotoGrid(photos: viewModel.photos, columns: columns, selectedPhotoIndex: $selectedPhotoIndex, animation: animation)
+                            PhotoGrid(
+                                photos: viewModel.photos,
+                                columns: columns,
+                                selectedPhotoIndex: $selectedPhotoIndex,
+                                animation: animation,
+                                onScrolledToEnd: { photo in
+                                    viewModel.loadMoreIfNeeded(currentItem: photo)
+                                }
+                            )
                         }
                     } else {
                         DeniedView(requestPermission: viewModel.checkAndRequestPermission)
@@ -52,15 +60,13 @@ struct AlbumView: View {
                 }
             }
         }
-        .onAppear {
+        .task {
             viewModel.checkAndRequestPermission()
+        }
+        .onChange(of: viewModel.isAuthorized) { oldValue, newValue in
+            if newValue {
+                viewModel.fetchPhotosIfAuthorized()
+            }
         }
     }
 }
-
-struct AlbumView_Previews: PreviewProvider {
-    static var previews: some View {
-        AlbumView()
-    }
-}
-
