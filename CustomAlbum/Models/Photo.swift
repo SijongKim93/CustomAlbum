@@ -12,4 +12,6 @@ struct Photo: Identifiable {
     let image: UIImage
     let date: Date?
     let location: String?
+    var isFavorite: Bool = false
 }
+

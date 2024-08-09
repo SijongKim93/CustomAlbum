@@ -12,6 +12,7 @@ struct PhotoBottomView: View {
     var onFavorite: () -> Void
     var onInfo: () -> Void
     var onDelete: () -> Void
+    var isFavorite: Bool
 
     var body: some View {
         HStack {
@@ -27,8 +28,9 @@ struct PhotoBottomView: View {
 
             Button(action: onFavorite) {
                 VStack {
-                    Image(systemName: "star")
+                    Image(systemName: isFavorite ? "star.fill" : "star")
                         .font(.system(size: 24))
+                        .foregroundColor(isFavorite ? .pink : .blue)
                 }
             }
             .padding()
@@ -53,19 +55,7 @@ struct PhotoBottomView: View {
             }
             .padding()
         }
-        .background(Color(UIColor.systemGray6))
+        .background(Color.black)
         .ignoresSafeArea()
-    }
-}
-
-struct FullScreenBottomBar_Previews: PreviewProvider {
-    static var previews: some View {
-        PhotoBottomView(
-            onShare: {},
-            onFavorite: {},
-            onInfo: {},
-            onDelete: {}
-        )
-        .previewLayout(.sizeThatFits)
     }
 }

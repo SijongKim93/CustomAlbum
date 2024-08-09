@@ -12,33 +12,45 @@ struct FullScreenPhotoView: View {
     var animation: Namespace.ID
 
     var body: some View {
-        VStack {
-            Spacer()
+        ZStack {
+            VStack {
+                Spacer()
 
-            Image(uiImage: viewModel.currentPhoto.image)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color.black)
-                .matchedGeometryEffect(id: viewModel.currentPhoto.id, in: animation)
+                Image(uiImage: viewModel.currentPhoto.image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.black)
+                    .matchedGeometryEffect(id: viewModel.currentPhoto.id, in: animation)
 
-            Spacer()
+                Spacer()
 
-            PhotoBottomView(
-                onShare: {
-                    viewModel.sharePhoto()
-                },
-                onFavorite: {
-                    viewModel.toggleFavorite()
-                },
-                onInfo: {
-                    viewModel.showPhotoInfo()
-                },
-                onDelete: {
-                    viewModel.deletePhoto()
-                }
-            )
-            .ignoresSafeArea(edges: .bottom)
+                PhotoBottomView(
+                    onShare: {
+                        viewModel.sharePhoto()
+                    },
+                    onFavorite: {
+                        viewModel.toggleFavorite()
+                    },
+                    onInfo: {
+                        viewModel.showPhotoInfo()
+                    },
+                    onDelete: {
+                        viewModel.deletePhoto()
+                    },
+                    isFavorite: viewModel.currentPhoto.isFavorite
+                )
+                .ignoresSafeArea(edges: .bottom)
+            }
+            
+            if viewModel.showFavoriteAnimation {
+                Image(systemName: "star.fill")
+                    .resizable()
+                    .frame(width: 100, height: 100)
+                    .foregroundColor(.yellow)
+                    .transition(.scale)
+                    .animation(.easeInOut(duration: 0.8), value: viewModel.showFavoriteAnimation)
+            }
         }
         .background(Color.black.edgesIgnoringSafeArea(.all))
         .navigationBarItems(trailing: Button("편집") {

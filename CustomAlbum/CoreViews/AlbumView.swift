@@ -21,28 +21,26 @@ struct AlbumView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Group {
-                    if viewModel.isAuthorized {
-                        if viewModel.photos.isEmpty {
-                            Text("사진이 없습니다.")
-                        } else {
-                            PhotoGrid(
-                                photos: viewModel.photos,
-                                columns: columns,
-                                selectedPhotoIndex: $selectedPhotoIndex,
-                                animation: animation,
-                                onScrolledToEnd: { photo in
-                                    viewModel.loadMoreIfNeeded(currentItem: photo)
-                                }
-                            )
-                        }
+                if viewModel.isAuthorized {
+                    if viewModel.photos.isEmpty {
+                        Text("사진이 없습니다.")
                     } else {
-                        DeniedView(requestPermission: viewModel.checkAndRequestPermission)
+                        PhotoGrid(
+                            photos: viewModel.photos,
+                            columns: columns,
+                            selectedPhotoIndex: $selectedPhotoIndex,
+                            animation: animation,
+                            onScrolledToEnd: { photo in
+                                viewModel.loadMoreIfNeeded(currentItem: photo)
+                            }
+                        )
                     }
+                } else {
+                    DeniedView(requestPermission: viewModel.checkAndRequestPermission)
                 }
-                .navigationTitle("My Album")
-                .background(Color.primary.colorInvert())
             }
+            .navigationTitle("My Album")
+            .background(Color.primary.colorInvert())
             .navigationDestination(isPresented: Binding(
                 get: { selectedPhotoIndex != nil },
                 set: { if !$0 {
@@ -56,6 +54,7 @@ struct AlbumView: View {
                         viewModel: FullScreenPhotoViewModel(photos: viewModel.photos, initialIndex: index),
                         animation: animation
                     )
+                    .toolbar(.hidden, for: .tabBar)
                 }
             }
         }
