@@ -9,10 +9,10 @@ import SwiftUI
 import CoreData
 
 struct FavoritesView: View {
-    @State private var favoritePhotos: [Favorite] = []
+    @StateObject private var viewModel = FavoritesViewModel()
     @Namespace private var animation
     @State private var selectedPhotoIndex: Int?
-
+    
     private let columns = [
         GridItem(.flexible(), spacing: 1),
         GridItem(.flexible(), spacing: 1),
@@ -22,22 +22,21 @@ struct FavoritesView: View {
     var body: some View {
         NavigationStack {
             PhotoGrid(
-                photos: favoritePhotos,
+                photos: viewModel.favoritePhotos,
                 columns: columns,
                 selectedPhotoIndex: $selectedPhotoIndex,
                 animation: animation,
-                imageForPhoto: { photoEntity in
-                    if let imageData = Data(base64Encoded: photoEntity.image ?? ""),
-                       let image = UIImage(data: imageData) {
-                        return image
-                    }
-                    return nil
+                imageForPhoto: { photo in
+                    photo.image
                 }
             )
             .navigationTitle("Favorites")
         }
         .onAppear {
-            favoritePhotos = CoreDataManager.shared.fetchFavoritePhotos()
+            viewModel.loadFavoritePhotos()
+        }
+        .onChange(of: selectedPhotoIndex) { _ in
+            viewModel.refreshFavoritePhotos()
         }
     }
 }

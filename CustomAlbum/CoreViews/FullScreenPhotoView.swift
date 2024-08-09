@@ -58,9 +58,9 @@ struct FullScreenPhotoView: View {
                 Image(systemName: "star.fill")
                     .resizable()
                     .frame(width: 100, height: 100)
-                    .foregroundColor(.yellow)
-                    .transition(.scale)
-                    .animation(.easeInOut(duration: 0.3), value: viewModel.showFavoriteAnimation)
+                    .foregroundColor(.pink)
+                    .transition(.scale.combined(with: .opacity))
+                    .animation(.spring(response: 0.5, dampingFraction: 0.1), value: viewModel.showFavoriteAnimation)
             }
         }
         .background(Color.black.edgesIgnoringSafeArea(.all))
