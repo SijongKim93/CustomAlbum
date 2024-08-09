@@ -9,6 +9,7 @@ import SwiftUI
 
 struct FullScreenPhotoView: View {
     @StateObject var viewModel: FullScreenPhotoViewModel
+    @StateObject private var zoomHandler = PhotoZoomHandler()
     var animation: Namespace.ID
 
     var body: some View {
@@ -25,6 +26,16 @@ struct FullScreenPhotoView: View {
                         .background(Color.black)
                         .matchedGeometryEffect(id: viewModel.currentPhoto.id, in: animation)
                         .offset(y: topOffset)
+                        .scaleEffect(zoomHandler.currentScale)
+                        .gesture(
+                            MagnificationGesture()
+                                .onChanged { value in
+                                    zoomHandler.magnificationChanged(value)
+                                }
+                                .onEnded { value in
+                                    zoomHandler.magnificationEnded(value)
+                                }
+                        )
                         .animation(.easeInOut(duration: 0.4), value: viewModel.showInfoView)
                         .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
                 }
