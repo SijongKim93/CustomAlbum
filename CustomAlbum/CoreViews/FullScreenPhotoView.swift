@@ -49,7 +49,7 @@ struct FullScreenPhotoView: View {
                     .frame(width: 100, height: 100)
                     .foregroundColor(.yellow)
                     .transition(.scale)
-                    .animation(.easeInOut(duration: 0.8), value: viewModel.showFavoriteAnimation)
+                    .animation(.easeInOut(duration: 0.3), value: viewModel.showFavoriteAnimation)
             }
         }
         .background(Color.black.edgesIgnoringSafeArea(.all))
