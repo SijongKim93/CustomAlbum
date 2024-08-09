@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct Photo: Identifiable {
+struct Photo: Identifiable, Hashable {
     let id: String
     let image: UIImage
     let date: Date?

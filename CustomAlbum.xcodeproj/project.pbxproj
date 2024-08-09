@@ -80,6 +80,15 @@
 			path = CoreViews;
 			sourceTree = "<group>";
 		};
+		4D048DCD2C66546A0026932D /* Component */ = {
+			isa = PBXGroup;
+			children = (
+				4DB2FE242C63A68300CD67EF /* PhotoGrid.swift */,
+				4DB2FE282C63B07000CD67EF /* PhotoGridItem.swift */,
+			);
+			path = Component;
+			sourceTree = "<group>";
+		};
 		4DB2FDF82C639E3F00CD67EF = {
 			isa = PBXGroup;
 			children = (
@@ -105,6 +114,7 @@
 				4D048D822C63D6B50026932D /* CoreViews */,
 				4DB2FE172C639FE700CD67EF /* Views */,
 				4DB2FE182C639FEC00CD67EF /* ViewModels */,
+				4D048DCD2C66546A0026932D /* Component */,
 				4DB2FE192C639FF300CD67EF /* Utilities */,
 				4DB2FE0A2C639E4000CD67EF /* Assets.xcassets */,
 				4D048DA52C66110A0026932D /* Favorite.xcdatamodeld */,
@@ -132,9 +142,7 @@
 		4DB2FE172C639FE700CD67EF /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				4DB2FE242C63A68300CD67EF /* PhotoGrid.swift */,
 				4D048DCB2C66259E0026932D /* InfoView.swift */,
-				4DB2FE282C63B07000CD67EF /* PhotoGridItem.swift */,
 				4DB2FE2A2C63B20100CD67EF /* DeniedView.swift */,
 				4D048D992C65E0810026932D /* PhotoBottomView.swift */,
 			);

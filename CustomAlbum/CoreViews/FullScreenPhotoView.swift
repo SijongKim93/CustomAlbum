@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FullScreenPhotoView: View {
-    @ObservedObject var viewModel: FullScreenPhotoViewModel
+    @StateObject var viewModel: FullScreenPhotoViewModel
     var animation: Namespace.ID
 
     var body: some View {
