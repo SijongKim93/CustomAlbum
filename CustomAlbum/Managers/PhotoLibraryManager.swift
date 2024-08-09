@@ -15,10 +15,10 @@ class PhotoLibraryManager: ObservableObject {
     private var lastFetchIndex: Int = 0
     private let fetchLimit = 50
     private var isFetching = false
-    private var hasMorePhotos = true  // 추가: 더 불러올 사진이 있는지 확인하는 플래그
+    private var hasMorePhotos = true
     
     func fetchPhotos() async {
-        guard !isFetching && hasMorePhotos else { return }  // hasMorePhotos 체크 추가
+        guard !isFetching && hasMorePhotos else { return }
         isFetching = true
         
         let fetchOptions = PHFetchOptions()
@@ -26,7 +26,6 @@ class PhotoLibraryManager: ObservableObject {
         
         let assets = PHAsset.fetchAssets(with: .image, options: fetchOptions)
         
-        // assets.count가 0이거나 lastFetchIndex가 assets.count 이상이면 더 이상 불러올 사진이 없음
         guard assets.count > 0 && lastFetchIndex < assets.count else {
             await MainActor.run {
                 hasMorePhotos = false
@@ -57,7 +56,7 @@ class PhotoLibraryManager: ObservableObject {
         await MainActor.run {
             self.photos.append(contentsOf: newPhotos)
             lastFetchIndex = endIndex
-            hasMorePhotos = endIndex < assets.count  // 더 불러올 사진이 있는지 확인
+            hasMorePhotos = endIndex < assets.count
             isFetching = false
         }
     }

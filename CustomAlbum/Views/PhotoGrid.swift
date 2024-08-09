@@ -22,9 +22,7 @@ struct PhotoGrid: View {
                     PhotoGridItem(photo: photos[index], isSelected: selectedPhotoIndex == index)
                         .aspectRatio(1, contentMode: .fit)
                         .onTapGesture {
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                                selectedPhotoIndex = index
-                            }
+                            selectedPhotoIndex = index
                         }
                         .matchedGeometryEffect(id: photos[index].id, in: animation)
                         .onAppear {

@@ -19,7 +19,7 @@ struct AlbumView: View {
     ]
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 Group {
                     if viewModel.isAuthorized {
@@ -40,31 +40,30 @@ struct AlbumView: View {
                         DeniedView(requestPermission: viewModel.checkAndRequestPermission)
                     }
                 }
-                .navigationTitle(selectedPhotoIndex == nil ? "My Album" : "")
+                .navigationTitle("My Album")
                 .background(Color.primary.colorInvert())
-                
+            }
+            .navigationDestination(isPresented: Binding(
+                get: { selectedPhotoIndex != nil },
+                set: { if !$0 {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                        selectedPhotoIndex = nil
+                    }
+                }}
+            )) {
                 if let index = selectedPhotoIndex {
                     FullScreenPhotoView(
                         viewModel: FullScreenPhotoViewModel(photos: viewModel.photos, initialIndex: index),
-                        isPresented: Binding(
-                            get: { selectedPhotoIndex != nil },
-                            set: { if !$0 {
-                                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                                    selectedPhotoIndex = nil
-                                }
-                            }}
-                        ),
                         animation: animation
                     )
-                    .zIndex(1)
                 }
             }
         }
         .task {
             viewModel.checkAndRequestPermission()
         }
-        .onChange(of: viewModel.isAuthorized) { oldValue, newValue in
-            if newValue {
+        .onAppear {
+            if viewModel.isAuthorized {
                 viewModel.fetchPhotosIfAuthorized()
             }
         }
