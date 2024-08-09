@@ -7,68 +7,55 @@
 
 import SwiftUI
 
-
 struct FullScreenPhotoView: View {
     @ObservedObject var viewModel: FullScreenPhotoViewModel
-    @Binding var isPresented: Bool
     var animation: Namespace.ID
-    @State private var dragOffset: CGSize = .zero
 
     var body: some View {
         ZStack {
-            Color.black.edgesIgnoringSafeArea(.all)
-
-            Image(uiImage: viewModel.currentPhoto.image)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .matchedGeometryEffect(id: viewModel.currentPhoto.id, in: animation)
-                .offset(dragOffset)
-                .gesture(
-                    DragGesture()
-                        .onChanged { gesture in
-                            dragOffset = gesture.translation
-                        }
-                        .onEnded { gesture in
-                            if abs(gesture.translation.height) > 100 {
-                                withAnimation(.spring()) {
-                                    isPresented = false
-                                }
-                            } else {
-                                withAnimation(.spring()) {
-                                    dragOffset = .zero
-                                }
-                            }
-                        }
-                )
-                .gesture(
-                    DragGesture(minimumDistance: 0)
-                        .onEnded { gesture in
-                            if gesture.translation.width > 50 {
-                                viewModel.showPreviousPhoto()
-                            } else if gesture.translation.width < -50 {
-                                viewModel.showNextPhoto()
-                            }
-                        }
-                )
-                .animation(.spring(), value: dragOffset)
-                .animation(.spring(), value: isPresented)
-            
             VStack {
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        withAnimation(.spring()) {
-                            isPresented = false
-                        }
-                    }) {
-                        Image(systemName: "xmark")
-                            .foregroundColor(.white)
-                            .padding()
-                    }
-                }
                 Spacer()
+
+                Image(uiImage: viewModel.currentPhoto.image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.black)
+                    .matchedGeometryEffect(id: viewModel.currentPhoto.id, in: animation)
+
+                Spacer()
+
+                PhotoBottomView(
+                    onShare: {
+                        viewModel.sharePhoto()
+                    },
+                    onFavorite: {
+                        viewModel.toggleFavorite()
+                    },
+                    onInfo: {
+                        viewModel.showPhotoInfo()
+                    },
+                    onDelete: {
+                        viewModel.deletePhoto()
+                    },
+                    isFavorite: viewModel.currentPhoto.isFavorite
+                )
+                .ignoresSafeArea(edges: .bottom)
+            }
+            
+            if viewModel.showFavoriteAnimation {
+                Image(systemName: "star.fill")
+                    .resizable()
+                    .frame(width: 100, height: 100)
+                    .foregroundColor(.yellow)
+                    .transition(.scale)
+                    .animation(.easeInOut(duration: 0.8), value: viewModel.showFavoriteAnimation)
             }
         }
-        .transition(.opacity)
+        .background(Color.black.edgesIgnoringSafeArea(.all))
+        .navigationBarItems(trailing: Button("편집") {
+            // 편집 액션
+        })
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

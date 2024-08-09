@@ -25,7 +25,7 @@ struct CustomAlbumApp: App {
 
     var body: some Scene {
         WindowGroup {
-            AlbumView()
+            AlbumTabView()
         }
         //.modelContainer(sharedModelContainer)
     }

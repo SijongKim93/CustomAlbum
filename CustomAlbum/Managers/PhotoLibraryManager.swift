@@ -5,41 +5,59 @@
 //  Created by 김시종 on 8/7/24.
 //
 
+
 import UIKit
 import Photos
 import CoreLocation
 
-
 class PhotoLibraryManager: ObservableObject {
     @Published var photos: [Photo] = []
+    private var lastFetchIndex: Int = 0
+    private let fetchLimit = 50
+    private var isFetching = false
+    private var hasMorePhotos = true
     
     func fetchPhotos() async {
+        guard !isFetching && hasMorePhotos else { return }
+        isFetching = true
+        
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         
         let assets = PHAsset.fetchAssets(with: .image, options: fetchOptions)
         
-        var newPhotos: [Photo] = []
+        guard assets.count > 0 && lastFetchIndex < assets.count else {
+            await MainActor.run {
+                hasMorePhotos = false
+                isFetching = false
+            }
+            return
+        }
         
-        await withTaskGroup(of: Photo?.self) { group in
-            for index in 0..<assets.count {
+        let endIndex = min(lastFetchIndex + fetchLimit, assets.count)
+        
+        let newPhotos: [Photo] = await withTaskGroup(of: Photo?.self) { group -> [Photo] in
+            for index in lastFetchIndex..<endIndex {
                 let asset = assets.object(at: index)
                 group.addTask {
                     return await self.getPhotoInfo(for: asset)
                 }
             }
             
+            var photos: [Photo] = []
             for await photo in group {
                 if let photo = photo {
-                    newPhotos.append(photo)
+                    photos.append(photo)
                 }
             }
+            return photos
         }
         
-        let sortedPhotos = newPhotos.sorted { $0.date ?? Date.distantPast > $1.date ?? Date.distantPast }
-        
-        DispatchQueue.main.async { [sortedPhotos] in
-            self.photos = sortedPhotos
+        await MainActor.run {
+            self.photos.append(contentsOf: newPhotos)
+            lastFetchIndex = endIndex
+            hasMorePhotos = endIndex < assets.count
+            isFetching = false
         }
     }
     
@@ -49,8 +67,8 @@ class PhotoLibraryManager: ObservableObject {
         options.deliveryMode = .highQualityFormat
         options.resizeMode = .exact
         
-        let scale = await UIScreen.main.scale
-        let screenWidth = await UIScreen.main.bounds.width
+        let scale =  await UIScreen.main.scale
+        let screenWidth =  await UIScreen.main.bounds.width
         let targetSize = CGSize(width: screenWidth * scale / 3, height: screenWidth * scale / 3)
         
         let image = await requestImage(for: asset, targetSize: targetSize, options: options)
