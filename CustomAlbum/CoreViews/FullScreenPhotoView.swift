@@ -14,17 +14,28 @@ struct FullScreenPhotoView: View {
     var body: some View {
         ZStack {
             VStack {
-                Spacer()
-
-                Image(uiImage: viewModel.currentPhoto.image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.black)
-                    .matchedGeometryEffect(id: viewModel.currentPhoto.id, in: animation)
-
-                Spacer()
-
+                GeometryReader { geometry in
+                    let topOffset = viewModel.showInfoView ? -geometry.size.height * 0.15 : 0
+                    
+                    Image(uiImage: viewModel.currentPhoto.image)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geometry.size.width, height: geometry.size.height * 0.65)
+                        .clipped()
+                        .background(Color.black)
+                        .matchedGeometryEffect(id: viewModel.currentPhoto.id, in: animation)
+                        .offset(y: topOffset)
+                        .animation(.easeInOut(duration: 0.4), value: viewModel.showInfoView)
+                        .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                }
+                
+                
+                if viewModel.showInfoView {
+                    InfoView(photo: viewModel.currentPhoto)
+                        .transition(.move(edge: .bottom))
+                        .animation(.easeInOut(duration: 0.4), value: viewModel.showInfoView)
+                }
+                
                 PhotoBottomView(
                     onShare: {
                         viewModel.sharePhoto()

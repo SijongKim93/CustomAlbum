@@ -15,6 +15,7 @@
 		4D048DA42C65EBE80026932D /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048DA32C65EBE80026932D /* MapView.swift */; };
 		4D048DA72C66110A0026932D /* Favorite.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4D048DA52C66110A0026932D /* Favorite.xcdatamodeld */; };
 		4D048DC82C6614070026932D /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048DC72C6614070026932D /* CoreDataManager.swift */; };
+		4D048DCC2C66259E0026932D /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048DCB2C66259E0026932D /* InfoView.swift */; };
 		4DB2FE052C639E3F00CD67EF /* CustomAlbumApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2FE042C639E3F00CD67EF /* CustomAlbumApp.swift */; };
 		4DB2FE0B2C639E4000CD67EF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DB2FE0A2C639E4000CD67EF /* Assets.xcassets */; };
 		4DB2FE0E2C639E4000CD67EF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DB2FE0D2C639E4000CD67EF /* Preview Assets.xcassets */; };
@@ -39,6 +40,7 @@
 		4D048DA32C65EBE80026932D /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		4D048DA62C66110A0026932D /* Favorite.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Favorite.xcdatamodel; sourceTree = "<group>"; };
 		4D048DC72C6614070026932D /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		4D048DCB2C66259E0026932D /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		4DB2FE012C639E3F00CD67EF /* CustomAlbum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CustomAlbum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DB2FE042C639E3F00CD67EF /* CustomAlbumApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlbumApp.swift; sourceTree = "<group>"; };
 		4DB2FE0A2C639E4000CD67EF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -98,11 +100,11 @@
 			isa = PBXGroup;
 			children = (
 				4DB2FE042C639E3F00CD67EF /* CustomAlbumApp.swift */,
+				4DB2FE1B2C63A01D00CD67EF /* Managers */,
 				4DB2FE162C639FE100CD67EF /* Models */,
 				4D048D822C63D6B50026932D /* CoreViews */,
 				4DB2FE172C639FE700CD67EF /* Views */,
 				4DB2FE182C639FEC00CD67EF /* ViewModels */,
-				4DB2FE1B2C63A01D00CD67EF /* Managers */,
 				4DB2FE192C639FF300CD67EF /* Utilities */,
 				4DB2FE0A2C639E4000CD67EF /* Assets.xcassets */,
 				4D048DA52C66110A0026932D /* Favorite.xcdatamodeld */,
@@ -131,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				4DB2FE242C63A68300CD67EF /* PhotoGrid.swift */,
+				4D048DCB2C66259E0026932D /* InfoView.swift */,
 				4DB2FE282C63B07000CD67EF /* PhotoGridItem.swift */,
 				4DB2FE2A2C63B20100CD67EF /* DeniedView.swift */,
 				4D048D992C65E0810026932D /* PhotoBottomView.swift */,
@@ -244,6 +247,7 @@
 				4D048D9E2C65EA530026932D /* AlbumTabView.swift in Sources */,
 				4DB2FE232C63A49400CD67EF /* AlbumViewModel.swift in Sources */,
 				4D048D812C63D6340026932D /* FullScreenPhotoView.swift in Sources */,
+				4D048DCC2C66259E0026932D /* InfoView.swift in Sources */,
 				4DB2FE292C63B07000CD67EF /* PhotoGridItem.swift in Sources */,
 				4D048D8E2C64B91C0026932D /* FullScreenPhotoViewModel.swift in Sources */,
 				4DB2FE152C639F7800CD67EF /* Photo.swift in Sources */,
