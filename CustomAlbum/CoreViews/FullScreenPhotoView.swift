@@ -54,16 +54,16 @@ struct FullScreenPhotoView: View {
                 
                 PhotoBottomView(
                     onShare: {
-                        viewModel.sharePhoto()
+                        viewModel.toggleSharePhoto()
                     },
                     onFavorite: {
                         viewModel.toggleFavorite()
                     },
                     onInfo: {
-                        viewModel.showPhotoInfo()
+                        viewModel.toggleInfo()
                     },
                     onDelete: {
-                        viewModel.deletePhoto()
+                        viewModel.toggleDeletePhoto()
                     },
                     isFavorite: viewModel.currentPhoto.isFavorite
                 )
@@ -86,10 +86,9 @@ struct FullScreenPhotoView: View {
             // 편집 액션
         })
         .navigationBarTitleDisplayMode(.inline)
-        .onChange(of: viewModel.shouldDismiss) { shouldDismiss in
-            if shouldDismiss {
+        .onChange(of: viewModel.shouldDismiss) {
+            if viewModel.shouldDismiss {
                 albumViewModel.removePhoto(by: viewModel.currentPhoto.id)
-                albumViewModel.refreshPhotos()
                 presentationMode.wrappedValue.dismiss()
             }
         }

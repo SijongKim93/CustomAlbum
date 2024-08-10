@@ -10,10 +10,11 @@ import Photos
 
 struct Photo: Identifiable, Hashable {
     let id: String
-    let image: UIImage
-    let date: Date?
-    let location: String?
+    var image: UIImage
+    var date: Date?
+    var location: String?
     var isFavorite: Bool = false
-    let asset: PHAsset?
+    var asset: PHAsset?
+    var assetIdentifier: String?
 }
 

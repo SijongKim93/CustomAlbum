@@ -9,6 +9,7 @@ import SwiftUI
 import CoreData
 
 struct FavoritesView: View {
+    @EnvironmentObject var albumViewModel: AlbumViewModel
     @StateObject private var viewModel = FavoritesViewModel()
     @Namespace private var animation
     @State private var selectedPhotoIndex: Int?
@@ -35,8 +36,26 @@ struct FavoritesView: View {
         .onAppear {
             viewModel.loadFavoritePhotos()
         }
-        .onChange(of: selectedPhotoIndex) { _ in
+        .onChange(of: selectedPhotoIndex) { newValue, oldValue in
             viewModel.refreshFavoritePhotos()
+        }
+        .navigationDestination(isPresented: Binding(
+            get: { selectedPhotoIndex != nil },
+            set: { if !$0 { selectedPhotoIndex = nil } }
+        )) {
+            if let index = selectedPhotoIndex {
+                FullScreenPhotoView(
+                    viewModel: FullScreenPhotoViewModel(
+                        photos: viewModel.favoritePhotos,
+                        initialIndex: index
+                    ),
+                    animation: animation
+                )
+                .environmentObject(albumViewModel)
+                .onDisappear {
+                    albumViewModel.refreshPhotos()
+                }
+            }
         }
     }
 }

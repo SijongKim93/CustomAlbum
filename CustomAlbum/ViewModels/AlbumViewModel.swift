@@ -76,10 +76,15 @@ class AlbumViewModel: ObservableObject {
         await photoLibraryManager.fetchPhotos()
     }
     
-    func removePhoto(by id: String) {
+    func removePhoto(by id: String, deleteFromCoreData: Bool = true) {
         if let index = photos.firstIndex(where: { $0.id == id }) {
-            CoreDataManager.shared.deleteFavoritePhoto(by: id)
             photos.remove(at: index)
+            if deleteFromCoreData {
+                CoreDataManager.shared.deleteFavoritePhoto(by: id)
+            }
+        }
+        if deleteFromCoreData {
+            refreshPhotos()
         }
     }
     
@@ -88,4 +93,6 @@ class AlbumViewModel: ObservableObject {
             await fetchPhotos()
         }
     }
+    
+    
 }

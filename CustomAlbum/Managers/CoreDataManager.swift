@@ -39,13 +39,14 @@ class CoreDataManager {
         }
     }
     
-    func saveFavoritePhoto(id: String, image: UIImage, date: Date?, location: String?) {
+    func saveFavoritePhoto(id: String, image: UIImage, date: Date?, location: String?, assetIdentifier: String) {
         let entity = Favorite(context: context)
         entity.id = id
         entity.image = image.pngData()?.base64EncodedString()
         entity.date = date
         entity.location = location
         entity.isFavorite = true
+        entity.assetIdentifier = assetIdentifier
         
         saveContext()
     }
