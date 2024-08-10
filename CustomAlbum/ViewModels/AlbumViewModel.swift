@@ -74,25 +74,76 @@ class AlbumViewModel: ObservableObject {
     
     private func fetchPhotos() async {
         await photoLibraryManager.fetchPhotos()
+        print("Photos fetched")
     }
     
+    @MainActor 
     func removePhoto(by id: String, deleteFromCoreData: Bool = true) {
+        // 메모리상의 photos 배열에서 해당 사진 제거
         if let index = photos.firstIndex(where: { $0.id == id }) {
             photos.remove(at: index)
-            if deleteFromCoreData {
-                CoreDataManager.shared.deleteFavoritePhoto(by: id)
+        }
+        
+        if deleteFromCoreData {
+            // CoreData에서 해당 사진 삭제
+            CoreDataManager.shared.deleteFavoritePhoto(by: id)
+            
+            // PHAsset에서 해당 사진 삭제
+            if let asset = PHAsset.fetchAssets(withLocalIdentifiers: [id], options: nil).firstObject {
+                PHPhotoLibrary.shared().performChanges({
+                    PHAssetChangeRequest.deleteAssets([asset] as NSFastEnumeration)
+                }) { success, error in
+                    if success {
+                        print("Asset successfully deleted")
+                    } else if let error = error {
+                        print("Error deleting asset: \(error.localizedDescription)")
+                    }
+                }
             }
         }
-        if deleteFromCoreData {
-            refreshPhotos()
+        
+        // 변경사항을 UI에 반영
+        DispatchQueue.main.async {
+            self.objectWillChange.send()
         }
+        
+        // 사진 목록 새로고침
+        refreshPhotos()
     }
     
+    @MainActor
     func refreshPhotos() {
+        print("Refreshing photos...")
         Task {
             await fetchPhotos()
+            updateFavoriteStates()
+            //printSpecificPhotos()
         }
     }
     
+    private func updateFavoriteStates() {
+        let favoritePhotos = CoreDataManager.shared.fetchFavoritePhotos()
+        for i in 0..<photos.count {
+            photos[i].isFavorite = favoritePhotos.contains { $0.id == photos[i].id }
+        }
+        objectWillChange.send()
+    }
     
+    private func printSpecificPhotos() {
+        let indices = [0, 1, 2]
+        for index in indices {
+            if index < photos.count {
+                let photo = photos[index]
+                print("Photo at index \(index):")
+                print("  ID: \(photo.id)")
+                print("  Is Favorite: \(photo.isFavorite)")
+                print("  Date: \(photo.date?.description ?? "N/A")")
+                print("  Location: \(photo.location ?? "N/A")")
+                print("  Asset Identifier: \(photo.assetIdentifier ?? "N/A")")
+                print("--------------------")
+            } else {
+                print("Photo at index \(index) does not exist.")
+            }
+        }
+    }
 }

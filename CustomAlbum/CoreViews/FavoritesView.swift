@@ -29,6 +29,9 @@ struct FavoritesView: View {
                 animation: animation,
                 imageForPhoto: { photo in
                     photo.image
+                },
+                isFavorite: { photo in
+                    photo.isFavorite
                 }
             )
             .navigationTitle("Favorites")
@@ -49,6 +52,7 @@ struct FavoritesView: View {
                         photos: viewModel.favoritePhotos,
                         initialIndex: index
                     ),
+                    editViewModel: EditImageViewModel(image: viewModel.favoritePhotos[index].image),
                     animation: animation
                 )
                 .environmentObject(albumViewModel)

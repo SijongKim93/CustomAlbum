@@ -82,8 +82,17 @@ class PhotoLibraryManager: ObservableObject {
         
         guard let image = image else { return nil }
         
-        return Photo(id: asset.localIdentifier, image: image, date: asset.creationDate, location: location, asset: asset,
-                     assetIdentifier: asset.localIdentifier)
+        let isFavorite = CoreDataManager.shared.isFavoritePhoto(id: asset.localIdentifier)
+        
+        return Photo(
+            id: asset.localIdentifier,
+            image: image,
+            date: asset.creationDate,
+            location: location,
+            isFavorite: isFavorite,
+            asset: asset,
+            assetIdentifier: asset.localIdentifier
+        )
     }
     
     private func requestImage(for asset: PHAsset, targetSize: CGSize, options: PHImageRequestOptions) async -> UIImage? {

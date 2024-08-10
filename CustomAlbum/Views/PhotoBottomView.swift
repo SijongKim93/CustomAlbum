@@ -20,6 +20,7 @@ struct PhotoBottomView: View {
                 VStack {
                     Image(systemName: "square.and.arrow.up")
                         .font(.system(size: 24))
+                        .foregroundColor(.white)
                 }
             }
             .padding()
@@ -30,7 +31,7 @@ struct PhotoBottomView: View {
                 VStack {
                     Image(systemName: isFavorite ? "star.fill" : "star")
                         .font(.system(size: 24))
-                        .foregroundColor(isFavorite ? .pink : .blue)
+                        .foregroundColor(isFavorite ? .pink : .white)
                 }
             }
             .padding()
@@ -41,6 +42,7 @@ struct PhotoBottomView: View {
                 VStack {
                     Image(systemName: "info.circle")
                         .font(.system(size: 24))
+                        .foregroundColor(.white)
                 }
             }
             .padding()

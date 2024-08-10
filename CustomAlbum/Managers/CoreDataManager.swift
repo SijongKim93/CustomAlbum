@@ -76,4 +76,17 @@ class CoreDataManager {
         }
     }
     
+    func isFavoritePhoto(id: String) -> Bool {
+        let request: NSFetchRequest<Favorite> = Favorite.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", id)
+        request.fetchLimit = 1
+        
+        do {
+            let result = try context.fetch(request)
+            return !result.isEmpty
+        } catch {
+            print("Error fetching favorite status: \(error)")
+            return false
+        }
+    }
 }
