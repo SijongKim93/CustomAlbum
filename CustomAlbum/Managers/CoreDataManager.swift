@@ -39,13 +39,14 @@ class CoreDataManager {
         }
     }
     
-    func saveFavoritePhoto(id: String, image: UIImage, date: Date?, location: String?) {
+    func saveFavoritePhoto(id: String, image: UIImage, date: Date?, location: String?, assetIdentifier: String) {
         let entity = Favorite(context: context)
         entity.id = id
         entity.image = image.pngData()?.base64EncodedString()
         entity.date = date
         entity.location = location
         entity.isFavorite = true
+        entity.assetIdentifier = assetIdentifier
         
         saveContext()
     }
@@ -75,4 +76,17 @@ class CoreDataManager {
         }
     }
     
+    func isFavoritePhoto(id: String) -> Bool {
+        let request: NSFetchRequest<Favorite> = Favorite.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", id)
+        request.fetchLimit = 1
+        
+        do {
+            let result = try context.fetch(request)
+            return !result.isEmpty
+        } catch {
+            print("Error fetching favorite status: \(error)")
+            return false
+        }
+    }
 }

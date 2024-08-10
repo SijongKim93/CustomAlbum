@@ -10,7 +10,7 @@ import UIKit
 extension Favorite {
     func toPhoto() -> Photo {
         var asset: PHAsset? = nil
-        if let assetIdentifier = self.asset {
+        if let assetIdentifier = self.assetIdentifier {
             let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [assetIdentifier], options: nil)
             asset = fetchResult.firstObject
         }
@@ -21,7 +21,8 @@ extension Favorite {
             date: self.date,
             location: self.location,
             isFavorite: self.isFavorite,
-            asset: asset
+            asset: asset,
+            assetIdentifier: self.assetIdentifier
         )
     }
 }

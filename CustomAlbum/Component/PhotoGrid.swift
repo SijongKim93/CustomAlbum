@@ -14,21 +14,26 @@ struct PhotoGrid<PhotoType: Identifiable & Hashable>: View {
     var animation: Namespace.ID
     var onScrolledToEnd: ((PhotoType) -> Void)?
     var imageForPhoto: (PhotoType) -> UIImage?
+    var isFavorite: (PhotoType) -> Bool
 
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 1) {
                 ForEach(photos.indices, id: \.self) { index in
                     if let image = imageForPhoto(photos[index]) {
-                        PhotoGridItem(photo: image, isSelected: selectedPhotoIndex == index)
-                            .aspectRatio(1, contentMode: .fit)
-                            .onTapGesture {
-                                selectedPhotoIndex = index
-                            }
-                            .matchedGeometryEffect(id: photos[index].id, in: animation)
-                            .onAppear {
-                                onScrolledToEnd?(photos[index])
-                            }
+                        PhotoGridItem(
+                            photo: image,
+                            isSelected: selectedPhotoIndex == index,
+                            isFavorite: isFavorite(photos[index])
+                        )
+                        .aspectRatio(1, contentMode: .fit)
+                        .onTapGesture {
+                            selectedPhotoIndex = index
+                        }
+                        .matchedGeometryEffect(id: photos[index].id, in: animation)
+                        .onAppear {
+                            onScrolledToEnd?(photos[index])
+                        }
                     }
                 }
             }
@@ -38,9 +43,10 @@ struct PhotoGrid<PhotoType: Identifiable & Hashable>: View {
             get: { selectedPhotoIndex != nil },
             set: { if !$0 { selectedPhotoIndex = nil } }
         )) {
-            if let index = selectedPhotoIndex {
+            if let index = selectedPhotoIndex, let image = imageForPhoto(photos[index]) {
                 FullScreenPhotoView(
                     viewModel: FullScreenPhotoViewModel(photos: photos as! [Photo], initialIndex: index),
+                    editViewModel: EditImageViewModel(image: image),
                     animation: animation
                 )
                 .toolbar(.hidden, for: .tabBar)

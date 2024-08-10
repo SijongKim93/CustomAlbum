@@ -16,10 +16,13 @@ class PhotoLibraryManager: ObservableObject {
     private let fetchLimit = 50
     private var isFetching = false
     private var hasMorePhotos = true
+    private let imageManager = PHCachingImageManager()
     
     func fetchPhotos() async {
         guard !isFetching && hasMorePhotos else { return }
         isFetching = true
+        
+        imageManager.stopCachingImagesForAllAssets()
         
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
@@ -54,7 +57,10 @@ class PhotoLibraryManager: ObservableObject {
         }
         
         await MainActor.run {
-            self.photos.append(contentsOf: newPhotos)
+            let newUniquePhotos = newPhotos.filter { newPhoto in
+                !self.photos.contains(where: { $0.id == newPhoto.id })
+            }
+            self.photos.append(contentsOf: newUniquePhotos)
             lastFetchIndex = endIndex
             hasMorePhotos = endIndex < assets.count
             isFetching = false
@@ -76,7 +82,17 @@ class PhotoLibraryManager: ObservableObject {
         
         guard let image = image else { return nil }
         
-        return Photo(id: asset.localIdentifier, image: image, date: asset.creationDate, location: location, asset: asset)
+        let isFavorite = CoreDataManager.shared.isFavoritePhoto(id: asset.localIdentifier)
+        
+        return Photo(
+            id: asset.localIdentifier,
+            image: image,
+            date: asset.creationDate,
+            location: location,
+            isFavorite: isFavorite,
+            asset: asset,
+            assetIdentifier: asset.localIdentifier
+        )
     }
     
     private func requestImage(for asset: PHAsset, targetSize: CGSize, options: PHImageRequestOptions) async -> UIImage? {

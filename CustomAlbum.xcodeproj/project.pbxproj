@@ -19,6 +19,11 @@
 		4D048DCF2C665C7D0026932D /* FavoriteTypeChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048DCE2C665C7D0026932D /* FavoriteTypeChange.swift */; };
 		4D048DD12C665EB90026932D /* FavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048DD02C665EB90026932D /* FavoritesViewModel.swift */; };
 		4D048DD32C667F580026932D /* PhotoZoomHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048DD22C667F580026932D /* PhotoZoomHandler.swift */; };
+		4D048DD52C67AF500026932D /* EditBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048DD42C67AF500026932D /* EditBottomView.swift */; };
+		4D048DD92C67C7530026932D /* EditImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048DD82C67C7530026932D /* EditImageViewModel.swift */; };
+		4D048DDD2C67D4040026932D /* EditActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048DDC2C67D4040026932D /* EditActionView.swift */; };
+		4D048DDF2C67DEB60026932D /* FilterButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048DDE2C67DEB60026932D /* FilterButton.swift */; };
+		4D048DE22C67E1420026932D /* ImageFilterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048DE12C67E1420026932D /* ImageFilterService.swift */; };
 		4DB2FE052C639E3F00CD67EF /* CustomAlbumApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2FE042C639E3F00CD67EF /* CustomAlbumApp.swift */; };
 		4DB2FE0B2C639E4000CD67EF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DB2FE0A2C639E4000CD67EF /* Assets.xcassets */; };
 		4DB2FE0E2C639E4000CD67EF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DB2FE0D2C639E4000CD67EF /* Preview Assets.xcassets */; };
@@ -47,6 +52,11 @@
 		4D048DCE2C665C7D0026932D /* FavoriteTypeChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTypeChange.swift; sourceTree = "<group>"; };
 		4D048DD02C665EB90026932D /* FavoritesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewModel.swift; sourceTree = "<group>"; };
 		4D048DD22C667F580026932D /* PhotoZoomHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoZoomHandler.swift; sourceTree = "<group>"; };
+		4D048DD42C67AF500026932D /* EditBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBottomView.swift; sourceTree = "<group>"; };
+		4D048DD82C67C7530026932D /* EditImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditImageViewModel.swift; sourceTree = "<group>"; };
+		4D048DDC2C67D4040026932D /* EditActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditActionView.swift; sourceTree = "<group>"; };
+		4D048DDE2C67DEB60026932D /* FilterButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterButton.swift; sourceTree = "<group>"; };
+		4D048DE12C67E1420026932D /* ImageFilterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFilterService.swift; sourceTree = "<group>"; };
 		4DB2FE012C639E3F00CD67EF /* CustomAlbum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CustomAlbum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DB2FE042C639E3F00CD67EF /* CustomAlbumApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlbumApp.swift; sourceTree = "<group>"; };
 		4DB2FE0A2C639E4000CD67EF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -91,8 +101,17 @@
 			children = (
 				4DB2FE242C63A68300CD67EF /* PhotoGrid.swift */,
 				4DB2FE282C63B07000CD67EF /* PhotoGridItem.swift */,
+				4D048DDE2C67DEB60026932D /* FilterButton.swift */,
 			);
 			path = Component;
+			sourceTree = "<group>";
+		};
+		4D048DE02C67E10F0026932D /* ImageEdit */ = {
+			isa = PBXGroup;
+			children = (
+				4D048DE12C67E1420026932D /* ImageFilterService.swift */,
+			);
+			path = ImageEdit;
 			sourceTree = "<group>";
 		};
 		4DB2FDF82C639E3F00CD67EF = {
@@ -120,6 +139,7 @@
 				4D048D822C63D6B50026932D /* CoreViews */,
 				4DB2FE172C639FE700CD67EF /* Views */,
 				4DB2FE182C639FEC00CD67EF /* ViewModels */,
+				4D048DE02C67E10F0026932D /* ImageEdit */,
 				4D048DCD2C66546A0026932D /* Component */,
 				4DB2FE192C639FF300CD67EF /* Utilities */,
 				4DB2FE0A2C639E4000CD67EF /* Assets.xcassets */,
@@ -151,6 +171,8 @@
 				4D048DCB2C66259E0026932D /* InfoView.swift */,
 				4DB2FE2A2C63B20100CD67EF /* DeniedView.swift */,
 				4D048D992C65E0810026932D /* PhotoBottomView.swift */,
+				4D048DD42C67AF500026932D /* EditBottomView.swift */,
+				4D048DDC2C67D4040026932D /* EditActionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -161,6 +183,7 @@
 				4DB2FE222C63A49400CD67EF /* AlbumViewModel.swift */,
 				4D048D8D2C64B91C0026932D /* FullScreenPhotoViewModel.swift */,
 				4D048DD02C665EB90026932D /* FavoritesViewModel.swift */,
+				4D048DD82C67C7530026932D /* EditImageViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -257,10 +280,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				4DB2FE272C63AB4600CD67EF /* DateFormatter.swift in Sources */,
+				4D048DDF2C67DEB60026932D /* FilterButton.swift in Sources */,
 				4D048DA72C66110A0026932D /* Favorite.xcdatamodeld in Sources */,
 				4DB2FE2D2C63B2CE00CD67EF /* SettingsUtility.swift in Sources */,
 				4D048DC82C6614070026932D /* CoreDataManager.swift in Sources */,
 				4DB2FE2B2C63B20100CD67EF /* DeniedView.swift in Sources */,
+				4D048DD52C67AF500026932D /* EditBottomView.swift in Sources */,
 				4D048D9E2C65EA530026932D /* AlbumTabView.swift in Sources */,
 				4DB2FE232C63A49400CD67EF /* AlbumViewModel.swift in Sources */,
 				4D048D812C63D6340026932D /* FullScreenPhotoView.swift in Sources */,
@@ -272,11 +297,14 @@
 				4DB2FE152C639F7800CD67EF /* Photo.swift in Sources */,
 				4D048DA42C65EBE80026932D /* MapView.swift in Sources */,
 				4DB2FE212C63A3B400CD67EF /* PermissionManager.swift in Sources */,
+				4D048DD92C67C7530026932D /* EditImageViewModel.swift in Sources */,
+				4D048DDD2C67D4040026932D /* EditActionView.swift in Sources */,
 				4D048DD32C667F580026932D /* PhotoZoomHandler.swift in Sources */,
 				4DB2FE052C639E3F00CD67EF /* CustomAlbumApp.swift in Sources */,
 				4DB2FE1F2C63A37A00CD67EF /* AlbumView.swift in Sources */,
 				4D048DA02C65EADA0026932D /* FavoritesView.swift in Sources */,
 				4DB2FE1D2C63A03900CD67EF /* PhotoLibraryManager.swift in Sources */,
+				4D048DE22C67E1420026932D /* ImageFilterService.swift in Sources */,
 				4DB2FE252C63A68300CD67EF /* PhotoGrid.swift in Sources */,
 				4D048D9A2C65E0810026932D /* PhotoBottomView.swift in Sources */,
 			);
@@ -337,7 +365,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -394,7 +422,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -421,7 +449,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -452,7 +480,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -11,6 +11,7 @@ struct AlbumView: View {
     @StateObject private var viewModel = AlbumViewModel()
     @Namespace private var animation
     @State private var selectedPhotoIndex: Int?
+    @Binding var tabSelection: Int
 
     private let columns = [
         GridItem(.flexible(), spacing: 1),
@@ -30,6 +31,9 @@ struct AlbumView: View {
                 },
                 imageForPhoto: { photo in
                     photo.image
+                }, 
+                isFavorite: { photo in
+                    photo.isFavorite
                 }
             )
             .navigationTitle("My Album")
@@ -41,6 +45,13 @@ struct AlbumView: View {
         .onAppear {
             if viewModel.isAuthorized {
                 viewModel.fetchPhotosIfAuthorized()
+            }
+            viewModel.refreshPhotos()
+        }
+        .onChange(of: tabSelection) { oldValue, newValue in
+            if newValue == 0 {
+                print("Tab changed to AlbumView")
+                viewModel.refreshPhotos()
             }
         }
     }
