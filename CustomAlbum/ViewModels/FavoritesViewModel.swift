@@ -15,9 +15,10 @@ class FavoritesViewModel: ObservableObject {
     }
 
     func loadFavoritePhotos() {
-        favoritePhotos = CoreDataManager.shared.fetchFavoritePhotos().map { $0.toPhoto() }
+        let favorites = CoreDataManager.shared.fetchFavoritePhotos()
+        self.favoritePhotos = favorites.compactMap { $0.toPhoto() }
     }
-
+    
     func refreshFavoritePhotos() {
         loadFavoritePhotos()
     }

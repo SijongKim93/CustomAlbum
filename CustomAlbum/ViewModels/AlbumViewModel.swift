@@ -75,4 +75,17 @@ class AlbumViewModel: ObservableObject {
     private func fetchPhotos() async {
         await photoLibraryManager.fetchPhotos()
     }
+    
+    func removePhoto(by id: String) {
+        if let index = photos.firstIndex(where: { $0.id == id }) {
+            CoreDataManager.shared.deleteFavoritePhoto(by: id)
+            photos.remove(at: index)
+        }
+    }
+    
+    func refreshPhotos() {
+        Task {
+            await fetchPhotos()
+        }
+    }
 }

@@ -7,28 +7,33 @@
 
 import SwiftUI
 
+
 struct InfoView: View {
     var photo: Photo
     
+    
     var body: some View {
         VStack(alignment: .leading) {
-            Text("사진 정보")
-                .font(.title)
-                .padding(.bottom, 10)
+            Text("정보")
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding(.vertical, 10)
             
             if let date = photo.date {
-                Text("날짜: \(DateFormatter.mediumDateShortTime.string(from: date))")
-                    .padding(.bottom, 5)
+                Text("날짜 : \(DateFormatter.mediumDateShortTime.string(from: date))")
+                    .font(.caption)
+                    .foregroundColor(.white)
+                    .padding(.bottom, 10)
             }
             
             if let location = photo.location {
-                Text("위치: \(location)")
-                    .padding(.bottom, 5)
+                Text("위치 : \(location)")
+                    .font(.caption)
+                    .foregroundColor(.white)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .background(Color.primary)
         .padding()
-        .background(Color(UIColor.systemBackground))
-        .cornerRadius(12)
-        .shadow(radius: 10)
     }
 }

@@ -34,6 +34,7 @@ struct AlbumView: View {
             )
             .navigationTitle("My Album")
         }
+        .environmentObject(viewModel)
         .task {
             viewModel.checkAndRequestPermission()
         }

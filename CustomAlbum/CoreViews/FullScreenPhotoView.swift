@@ -8,14 +8,17 @@
 import SwiftUI
 
 struct FullScreenPhotoView: View {
+    @EnvironmentObject var albumViewModel: AlbumViewModel
     @StateObject var viewModel: FullScreenPhotoViewModel
     @StateObject private var zoomHandler = PhotoZoomHandler()
     var animation: Namespace.ID
-
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         ZStack {
             VStack {
                 GeometryReader { geometry in
+                    let imageHeight = geometry.size.height * 0.65
                     let topOffset = viewModel.showInfoView ? -geometry.size.height * 0.15 : 0
                     
                     Image(uiImage: viewModel.currentPhoto.image)
@@ -38,13 +41,15 @@ struct FullScreenPhotoView: View {
                         )
                         .animation(.easeInOut(duration: 0.4), value: viewModel.showInfoView)
                         .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
-                }
-                
-                
-                if viewModel.showInfoView {
-                    InfoView(photo: viewModel.currentPhoto)
-                        .transition(.move(edge: .bottom))
-                        .animation(.easeInOut(duration: 0.4), value: viewModel.showInfoView)
+                    
+                    if viewModel.showInfoView {
+                        InfoView(photo: viewModel.currentPhoto)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: geometry.size.height * 0.37)
+                            .transition(.move(edge: .bottom))
+                            .animation(.easeInOut(duration: 0.4), value: viewModel.showInfoView)
+                            .offset(y: imageHeight)
+                    }
                 }
                 
                 PhotoBottomView(
@@ -64,6 +69,7 @@ struct FullScreenPhotoView: View {
                 )
                 .ignoresSafeArea(edges: .bottom)
             }
+            .frame(maxWidth: .infinity)
             
             if viewModel.showFavoriteAnimation {
                 Image(systemName: "star.fill")
@@ -73,11 +79,19 @@ struct FullScreenPhotoView: View {
                     .transition(.scale.combined(with: .opacity))
                     .animation(.spring(response: 0.5, dampingFraction: 0.1), value: viewModel.showFavoriteAnimation)
             }
+               
         }
         .background(Color.black.edgesIgnoringSafeArea(.all))
         .navigationBarItems(trailing: Button("편집") {
             // 편집 액션
         })
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: viewModel.shouldDismiss) { shouldDismiss in
+            if shouldDismiss {
+                albumViewModel.removePhoto(by: viewModel.currentPhoto.id)
+                albumViewModel.refreshPhotos()
+                presentationMode.wrappedValue.dismiss()
+            }
+        }
     }
 }
