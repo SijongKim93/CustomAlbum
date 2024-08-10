@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Photos
 
 struct Photo: Identifiable, Hashable {
     let id: String
@@ -13,5 +14,6 @@ struct Photo: Identifiable, Hashable {
     let date: Date?
     let location: String?
     var isFavorite: Bool = false
+    let asset: PHAsset?
 }
 

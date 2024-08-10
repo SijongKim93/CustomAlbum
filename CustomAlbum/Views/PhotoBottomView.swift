@@ -51,6 +51,7 @@ struct PhotoBottomView: View {
                 VStack {
                     Image(systemName: "trash")
                         .font(.system(size: 24))
+                        .foregroundColor(.red)
                 }
             }
             .padding()
