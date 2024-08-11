@@ -9,16 +9,19 @@ import SwiftUI
 
 struct EditBottomView: View {
     @ObservedObject var viewModel: EditImageViewModel
+    @Binding var cropRect: CGRect
+    @Binding var imageViewSize: CGSize
+    @Binding var rotationAngle: CGFloat
 
     var body: some View {
         VStack {
-            if $viewModel.selectedAction != nil {
-                EditActionView(selectedAction: $viewModel.selectedAction, editViewModel: viewModel)
+            if viewModel.selectedAction != nil {
+                EditActionView(selectedAction: $viewModel.selectedAction, editViewModel: viewModel, cropRect: $cropRect, imageViewSize: $imageViewSize, rotationAngle: $rotationAngle)
             }
             HStack {
                 Button(action: {
                     withAnimation {
-                        viewModel.applyFilter()
+                        viewModel.toggleFilter()
                     }
                 }) {
                     VStack {
@@ -33,7 +36,7 @@ struct EditBottomView: View {
                 
                 Button(action: {
                     withAnimation {
-                        viewModel.applyCrop()
+                        viewModel.toggleCrop()
                     }
                 }) {
                     VStack {
@@ -48,7 +51,7 @@ struct EditBottomView: View {
                 
                 Button(action: {
                     withAnimation {
-                        viewModel.applyCollage()
+                        viewModel.toggleCollage()
                     }
                 }) {
                     VStack {

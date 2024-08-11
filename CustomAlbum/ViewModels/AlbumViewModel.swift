@@ -79,16 +79,13 @@ class AlbumViewModel: ObservableObject {
     
     @MainActor 
     func removePhoto(by id: String, deleteFromCoreData: Bool = true) {
-        // 메모리상의 photos 배열에서 해당 사진 제거
         if let index = photos.firstIndex(where: { $0.id == id }) {
             photos.remove(at: index)
         }
         
         if deleteFromCoreData {
-            // CoreData에서 해당 사진 삭제
             CoreDataManager.shared.deleteFavoritePhoto(by: id)
             
-            // PHAsset에서 해당 사진 삭제
             if let asset = PHAsset.fetchAssets(withLocalIdentifiers: [id], options: nil).firstObject {
                 PHPhotoLibrary.shared().performChanges({
                     PHAssetChangeRequest.deleteAssets([asset] as NSFastEnumeration)
@@ -102,12 +99,10 @@ class AlbumViewModel: ObservableObject {
             }
         }
         
-        // 변경사항을 UI에 반영
         DispatchQueue.main.async {
             self.objectWillChange.send()
         }
         
-        // 사진 목록 새로고침
         refreshPhotos()
     }
     
