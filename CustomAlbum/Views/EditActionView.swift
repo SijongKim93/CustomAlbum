@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// EditAction Enum
 enum EditAction {
     case filter
     case crop
@@ -15,86 +14,21 @@ enum EditAction {
     case portraitMode
 }
 
-// EditActionView
 struct EditActionView: View {
     @Binding var selectedAction: EditAction?
     @ObservedObject var editViewModel: EditImageViewModel
+    @Binding var cropRect: CGRect
+    @Binding var imageViewSize: CGSize
+    @Binding var rotationAngle: CGFloat
     
     var body: some View {
         VStack {
             if let action = selectedAction {
                 switch action {
                 case .filter:
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 20) {
-                            FilterButton(
-                                filterName: "Sepia",
-                                filterAction: {
-                                    editViewModel.applySepiaTone()
-                                },
-                                image: editViewModel.applyPreviewFilter(filterName: "CISepiaTone")
-                            )
-                            
-                            FilterButton(
-                                filterName: "Noir",
-                                filterAction: {
-                                    editViewModel.applyNoir()
-                                },
-                                image: editViewModel.applyPreviewFilter(filterName: "CIPhotoEffectNoir")
-                            )
-                            
-                            FilterButton(
-                                filterName: "Chrome",
-                                filterAction: {
-                                    editViewModel.applyChrome()
-                                },
-                                image: editViewModel.applyPreviewFilter(filterName: "CIPhotoEffectChrome")
-                            )
-                            
-                            FilterButton(
-                                filterName: "Instant",
-                                filterAction: {
-                                    editViewModel.applyInstant()
-                                },
-                                image: editViewModel.applyPreviewFilter(filterName: "CIPhotoEffectInstant")
-                            )
-                            
-                            FilterButton(
-                                filterName: "Fade",
-                                filterAction: {
-                                    editViewModel.applyFade()
-                                },
-                                image: editViewModel.applyPreviewFilter(filterName: "CIPhotoEffectFade")
-                            )
-                            
-                            FilterButton(
-                                filterName: "Mono",
-                                filterAction: {
-                                    editViewModel.applyMonochrome()
-                                },
-                                image: editViewModel.applyPreviewFilter(filterName: "CIColorMonochrome")
-                            )
-                            
-                            FilterButton(
-                                filterName: "Poster",
-                                filterAction: {
-                                    editViewModel.applyPosterize()
-                                },
-                                image: editViewModel.applyPreviewFilter(filterName: "CIColorPosterize")
-                            )
-                            
-                            FilterButton(
-                                filterName: "Vignette",
-                                filterAction: {
-                                    editViewModel.applyVignette()
-                                },
-                                image: editViewModel.applyPreviewFilter(filterName: "CIVignette")
-                            )
-                        }
-                        .padding(.horizontal)
-                    }
+                    FilterScrollView(editViewModel: editViewModel)
                 case .crop:
-                    Text("자르기 편집 UI")
+                    CropOptionsView(editViewModel: editViewModel, cropRect: $cropRect, imageViewSize: $imageViewSize)
                 case .collage:
                     Text("콜라주 편집 UI")
                 case .portraitMode:
@@ -106,4 +40,33 @@ struct EditActionView: View {
         .background(Color.black)
         .transition(.move(edge: .bottom))
     }
+    
+    private func setCropBoxAspectRatio(_ ratio: CGFloat) {
+            let width = min(imageViewSize.width, imageViewSize.height * ratio)
+            let height = width / ratio
+            cropRect = CGRect(
+                x: (imageViewSize.width - width) / 2,
+                y: (imageViewSize.height - height) / 2,
+                width: width,
+                height: height
+            )
+        }
+
+        private func setCropBoxToOriginalAspectRatio() {
+            cropRect = CGRect(
+                x: 0,
+                y: 0,
+                width: imageViewSize.width,
+                height: imageViewSize.height
+            )
+        }
+        
+        private func resetCropBox() {
+            cropRect = CGRect(
+                x: 20,
+                y: 20,
+                width: imageViewSize.width - 40,
+                height: imageViewSize.height - 40
+            )
+        }
 }
