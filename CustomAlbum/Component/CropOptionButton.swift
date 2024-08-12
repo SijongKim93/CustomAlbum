@@ -8,19 +8,19 @@
 import SwiftUI
 
 struct CropOptionButton: View {
-    var optionName: String
-    var action: () -> Void
+    let optionName: String
+    let iconName: String
+    let action: () -> Void
     
     var body: some View {
         Button(action: action) {
             VStack {
-                Image(systemName: optionName == "우회전" ? "rotate.right" : (optionName == "좌회전" ? "rotate.left" : "aspectratio"))
+                Image(systemName: iconName)
                     .font(.system(size: 24))
-                    .foregroundColor(.white)
                 Text(optionName)
                     .font(.caption)
-                    .foregroundColor(.white)
             }
         }
     }
 }
+

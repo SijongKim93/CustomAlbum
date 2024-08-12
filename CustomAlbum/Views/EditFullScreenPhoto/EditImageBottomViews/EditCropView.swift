@@ -14,37 +14,40 @@ struct EditCropView: View {
     
     var body: some View {
         HStack(spacing: 30) {
-            CropOptionButton(optionName: "1:1") {
+            CropOptionButton(optionName: "1:1", iconName: "square") {
                 cropViewModel.setCropAspectRatio(1, imageViewSize: imageViewSize)
                 DispatchQueue.main.async {
                     self.cropRect = cropViewModel.cropRect
                 }
             }
             
-            CropOptionButton(optionName: "4:3") {
+            CropOptionButton(optionName: "4:3", iconName: "rectangle") {
                 cropViewModel.setCropAspectRatio(4.0 / 3.0, imageViewSize: imageViewSize)
                 DispatchQueue.main.async {
                     self.cropRect = cropViewModel.cropRect
                 }
             }
             
-            CropOptionButton(optionName: "좌회전") {
+            CropOptionButton(optionName: "좌회전", iconName: "rotate.left") {
                 if cropViewModel.rotateImageLeft(UIImage()) != nil {
                 }
             }
             
-            CropOptionButton(optionName: "우회전") {
+            CropOptionButton(optionName: "우회전", iconName: "rotate.right") {
                 if cropViewModel.rotateImageRight(UIImage()) != nil {
                 }
             }
             
-            CropOptionButton(optionName: "초기화") {
-                cropViewModel.setCropBoxToOriginalAspectRatio(imageViewSize: imageViewSize)
-                DispatchQueue.main.async {
-                    self.cropRect = cropViewModel.cropRect
-                }
-                print("초기화 눌림, cropRect: \(cropRect)")
+            CropOptionButton(optionName: "자르기", iconName: "crop") {
+                cropViewModel.applyCrop(imageViewSize: imageViewSize)
             }
+            .foregroundColor(.green)
+            
+            CropOptionButton(optionName: "초기화", iconName: "arrow.counterclockwise") {
+                cropViewModel.resetCropBox(imageViewSize: imageViewSize)
+                self.cropRect = cropViewModel.cropRect
+            }
+            .foregroundColor(.blue)
         }
         .frame(maxWidth: .infinity)
         .padding()
@@ -54,3 +57,4 @@ struct EditCropView: View {
         }
     }
 }
+

@@ -11,6 +11,8 @@ class EditCropViewModel: ObservableObject {
     @Published var cropRect: CGRect = .zero
     @Published var cropApplied: Bool = false
     @Published var rotationAngle: CGFloat = 0.0
+    @Published var isCropBoxVisible: Bool = true
+    @Published var croppedImage: UIImage?
     var image: UIImage
     
     private let cropService = ImageCropService()
@@ -80,6 +82,61 @@ class EditCropViewModel: ObservableObject {
             width: imageViewSize.width,
             height: imageViewSize.height
         )
+    }
+    
+    func applyCrop(imageViewSize: CGSize) {
+        if let croppedImage = crop(image: image, cropArea: cropRect, imageViewSize: imageViewSize) {
+            self.croppedImage = croppedImage
+            self.cropApplied = true
+            self.isCropBoxVisible = false
+        }
+    }
+    
+    func resetCropBox(imageViewSize: CGSize) {
+        setCropBoxToOriginalAspectRatio(imageViewSize: imageViewSize)
+        self.cropApplied = false
+        self.isCropBoxVisible = true
+        self.croppedImage = nil
+    }
+    
+    private func crop(image: UIImage, cropArea: CGRect, imageViewSize: CGSize) -> UIImage? {
+        let scaleX = image.size.width / imageViewSize.width * image.scale
+        let scaleY = image.size.height / imageViewSize.height * image.scale
+        let scaledCropArea = CGRect(
+            x: cropArea.origin.x * scaleX,
+            y: cropArea.origin.y * scaleY,
+            width: cropArea.size.width * scaleX,
+            height: cropArea.size.height * scaleY
+        )
+        
+        guard let cutImageRef: CGImage = image.cgImage?.cropping(to: scaledCropArea) else {
+            return nil
+        }
+        
+        return UIImage(cgImage: cutImageRef)
+    }
+    
+    func initializeCropBox(for imageSize: CGSize, in viewSize: CGSize) {
+        let imageAspectRatio = imageSize.width / imageSize.height
+        let viewAspectRatio = viewSize.width / viewSize.height
+        
+        var cropWidth: CGFloat
+        var cropHeight: CGFloat
+        
+        if imageAspectRatio > viewAspectRatio {
+            cropWidth = viewSize.width
+            cropHeight = viewSize.width / imageAspectRatio
+        } else {
+            
+            cropHeight = viewSize.height
+            cropWidth = viewSize.height * imageAspectRatio
+        }
+        
+        let x = (viewSize.width - cropWidth) / 2
+        let y = (viewSize.height - cropHeight) / 2
+        
+        self.cropRect = CGRect(x: x, y: y, width: cropWidth, height: cropHeight)
+        self.isCropBoxVisible = true
     }
     
     // MARK: - Rotate 적용

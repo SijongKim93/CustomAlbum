@@ -43,13 +43,15 @@ struct EditFullScreenPhotoView: View {
             finalImage = blurredImage
         }
         
-        if editViewModel.selectedAction == .crop, cropViewModel.cropApplied {
-            finalImage = cropViewModel.applyCrop(with: cropViewModel.cropRect, imageViewSize: imageViewSize, to: finalImage) ?? finalImage
+        if editViewModel.selectedAction == .crop, let croppedImage = cropViewModel.croppedImage {
+            return croppedImage
         }
         
         return finalImage
     }
-
+    
+    
+    
     var body: some View {
         ZStack {
             VStack {
@@ -63,17 +65,15 @@ struct EditFullScreenPhotoView: View {
                         .scaleEffect(zoomHandler.currentScale)
                         .offset(y: imageOffset)
                         .onAppear {
-                            self.imageViewSize = geometry.size
-                            centerCropBox(in: geometry.size)
+                            let imageSize = viewModel.currentPhoto.image.size
+                            let viewSize = CGSize(width: geometry.size.width, height: geometry.size.height * 0.65)
+                            cropViewModel.initializeCropBox(for: imageSize, in: viewSize)
+                            self.imageViewSize = viewSize
                         }
                         .overlay(
                             GeometryReader { geometry in
-                                if editViewModel.selectedAction == .crop {
+                                if editViewModel.selectedAction == .crop && cropViewModel.isCropBoxVisible {
                                     CropBox(rect: $cropViewModel.cropRect, minSize: CGSize(width: 100, height: 100))
-                                        .onAppear {
-                                            self.imageViewSize = geometry.size
-                                            centerCropBox(in: geometry.size)
-                                        }
                                 }
                             }
                         )
