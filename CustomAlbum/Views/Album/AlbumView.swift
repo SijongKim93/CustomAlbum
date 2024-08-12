@@ -48,12 +48,6 @@ struct AlbumView: View {
             }
             viewModel.refreshPhotos()
         }
-        .onChange(of: tabSelection) { oldValue, newValue in
-            if newValue == 0 {
-                print("Tab changed to AlbumView")
-                viewModel.refreshPhotos()
-            }
-        }
         .onChange(of: selectedPhotoIndex) { newValue, oldValue in
             viewModel.refreshPhotos()
         }

@@ -41,7 +41,7 @@ struct EditActionView: View {
         }
         
         if editViewModel.selectedAction == .crop, cropViewModel.cropApplied {
-            finalImage = cropViewModel.applyCrop(with: cropViewModel.cropRect, imageViewSize: imageViewSize, to: finalImage) ?? finalImage
+            finalImage = cropViewModel.applyActionCrop(with: cropViewModel.cropRect, imageViewSize: imageViewSize, to: finalImage) ?? finalImage
         }
         
         return finalImage

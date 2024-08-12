@@ -17,12 +17,17 @@ struct EditFullScreenPhotoView: View {
     @StateObject private var zoomHandler = PhotoZoomHandler()
     var animation: Namespace.ID
     @Binding var isEditing: Bool
+    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var albumViewModel: AlbumViewModel
     @State private var showAlert = false
+    @State private var showSaveAlert = false
     @State private var imageViewSize: CGSize = .zero
+    @State private var isSaving = false
+    @State private var showSaveErrorAlert = false
     
     private var imageOffset: CGFloat {
         if editViewModel.selectedAction == .adjustment {
-            return -100
+            return -80
         } else {
             return 0
         }
@@ -71,7 +76,7 @@ struct EditFullScreenPhotoView: View {
                             self.imageViewSize = viewSize
                         }
                         .overlay(
-                            GeometryReader { geometry in
+                            Group {
                                 if editViewModel.selectedAction == .crop && cropViewModel.isCropBoxVisible {
                                     CropBox(rect: $cropViewModel.cropRect, minSize: CGSize(width: 100, height: 100))
                                 }
@@ -120,6 +125,7 @@ struct EditFullScreenPhotoView: View {
                             editViewModel.resetEdits()
                             isEditing = false
                             editViewModel.selectedAction = nil
+                            presentationMode.wrappedValue.dismiss()
                         },
                         secondaryButton: .cancel()
                     )
@@ -127,9 +133,31 @@ struct EditFullScreenPhotoView: View {
             }
         }
         .background(Color.black.edgesIgnoringSafeArea(.all))
-        .navigationBarItems(trailing: Button("취소") {
-            showAlert = true
-        })
+        .navigationBarItems(
+            trailing: HStack(spacing: 25) {
+                Button("취소") {
+                    showAlert = true
+                }
+                Button("저장") {
+                    saveEditedImage()
+                }
+            }
+        )
+    }
+    
+    private func saveEditedImage() {
+        isSaving = true
+        
+        editViewModel.saveEditedImage(editedImage: displayedImage) { success in
+            isSaving = false
+            if success {
+                isEditing = false
+                albumViewModel.refreshPhotos()
+                presentationMode.wrappedValue.dismiss()
+            } else {
+                showSaveErrorAlert = true
+            }
+        }
     }
     
     private func centerCropBox(in size: CGSize) {

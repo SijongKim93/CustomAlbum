@@ -74,7 +74,6 @@ class AlbumViewModel: ObservableObject {
     
     private func fetchPhotos() async {
         await photoLibraryManager.fetchPhotos()
-        print("Photos fetched")
     }
     
     @MainActor 
@@ -108,11 +107,9 @@ class AlbumViewModel: ObservableObject {
     
     @MainActor
     func refreshPhotos() {
-        print("Refreshing photos...")
         Task {
             await fetchPhotos()
             updateFavoriteStates()
-            //printSpecificPhotos()
         }
     }
     
@@ -122,23 +119,5 @@ class AlbumViewModel: ObservableObject {
             photos[i].isFavorite = favoritePhotos.contains { $0.id == photos[i].id }
         }
         objectWillChange.send()
-    }
-    
-    private func printSpecificPhotos() {
-        let indices = [0, 1, 2]
-        for index in indices {
-            if index < photos.count {
-                let photo = photos[index]
-                print("Photo at index \(index):")
-                print("  ID: \(photo.id)")
-                print("  Is Favorite: \(photo.isFavorite)")
-                print("  Date: \(photo.date?.description ?? "N/A")")
-                print("  Location: \(photo.location ?? "N/A")")
-                print("  Asset Identifier: \(photo.assetIdentifier ?? "N/A")")
-                print("--------------------")
-            } else {
-                print("Photo at index \(index) does not exist.")
-            }
-        }
     }
 }

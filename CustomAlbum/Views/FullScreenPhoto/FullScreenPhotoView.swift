@@ -37,7 +37,7 @@ struct FullScreenPhotoView: View {
         }
         
         if editViewModel.selectedAction == .crop, cropViewModel.cropApplied {
-            finalImage = cropViewModel.applyCrop(with: cropViewModel.cropRect, imageViewSize: CGSize.zero, to: finalImage) ?? finalImage
+            finalImage = cropViewModel.applyActionCrop(with: cropViewModel.cropRect, imageViewSize: CGSize.zero, to: finalImage) ?? finalImage
         }
         
         return finalImage
@@ -126,7 +126,7 @@ struct FullScreenPhotoView: View {
         }
         .background(Color.black.edgesIgnoringSafeArea(.all))
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarItems(trailing: editButton)
+        .navigationBarItems(trailing: isEditing ? nil : editButton)
         .onChange(of: viewModel.shouldDismiss) { _, shouldDismiss in
             if shouldDismiss {
                 albumViewModel.removePhoto(by: viewModel.currentPhoto.id)
@@ -137,11 +137,13 @@ struct FullScreenPhotoView: View {
     
     private var editButton: some View {
         Button(action: {
-            withAnimation {
-                isEditing.toggle()
+            if !isEditing {
+                withAnimation {
+                    isEditing.toggle()
+                }
             }
         }) {
-            Text(isEditing ? "저장" : "편집")
+            Text("편집")
         }
     }
     
