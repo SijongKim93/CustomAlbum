@@ -23,22 +23,19 @@ class EditBlurViewModel: ObservableObject {
     func applyBlur(at point: CGPoint, in imageSize: CGSize, imageFrame: CGRect) {
         guard let editedImage = bluredImage else { return }
         
-        // 이미지가 화면에 맞게 조정된 크기 계산
         let adjustedImageWidth = imageSize.width
         let adjustedImageHeight = imageSize.height
         
-        // 이미지가 화면에 중앙에 위치하도록 오프셋 계산
+ 
         let offsetX = (imageFrame.width - adjustedImageWidth) / 2
-        let offsetY = (imageFrame.height - adjustedImageHeight) / 2
+        let offsetY = (imageFrame.height - adjustedImageHeight) / 2 - 130
         
-        // 터치 좌표를 이미지 내 좌표로 변환
         let relativeX = (point.x - offsetX) / adjustedImageWidth
         let relativeY = (point.y - offsetY) / adjustedImageHeight
         
-        // 스케일링된 좌표 계산 (Y축 반전 포함)
         let scaledPoint = CGPoint(
             x: relativeX * editedImage.size.width,
-            y: (1 - relativeY) * editedImage.size.height  // Y
+            y: (1 - relativeY) * editedImage.size.height
         )
         
         if let blurredImage = applyBlurToImage(image: editedImage, at: scaledPoint, radius: blurRadius) {
@@ -47,6 +44,7 @@ class EditBlurViewModel: ObservableObject {
             }
         }
     }
+
     
     private func applyBlurToImage(image: UIImage, at point: CGPoint, radius: CGFloat) -> UIImage? {
         guard let ciImage = CIImage(image: image) else { return nil }

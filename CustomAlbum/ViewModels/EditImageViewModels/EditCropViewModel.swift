@@ -87,20 +87,16 @@ class EditCropViewModel: ObservableObject {
     func applyCrop(imageViewSize: CGSize) {
         if let croppedImage = crop(image: image, cropArea: cropRect, imageViewSize: imageViewSize) {
             self.croppedImage = croppedImage
-            DispatchQueue.main.async {
-                self.cropApplied = true
-                self.isCropBoxVisible = false
-            }
+            self.cropApplied = true
+            self.isCropBoxVisible = false
         }
     }
     
     func resetCropBox(imageViewSize: CGSize) {
         setCropBoxToOriginalAspectRatio(imageViewSize: imageViewSize)
-        DispatchQueue.main.async {
             self.cropApplied = false
             self.isCropBoxVisible = true
             self.croppedImage = nil
-        }
     }
     
     private func crop(image: UIImage, cropArea: CGRect, imageViewSize: CGSize) -> UIImage? {

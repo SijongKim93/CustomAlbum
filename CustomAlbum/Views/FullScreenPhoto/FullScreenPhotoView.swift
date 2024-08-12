@@ -122,6 +122,7 @@ struct FullScreenPhotoView: View {
                     animation: animation,
                     isEditing: $isEditing
                 )
+                .gesture(DragGesture().onChanged { _ in })
             }
         }
         .background(Color.black.edgesIgnoringSafeArea(.all))
@@ -133,6 +134,9 @@ struct FullScreenPhotoView: View {
                 presentationMode.wrappedValue.dismiss()
             }
         }
+        .gesture(
+            isEditing ? DragGesture().onChanged { _ in } : nil
+        )
     }
     
     private var editButton: some View {

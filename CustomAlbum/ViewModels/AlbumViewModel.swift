@@ -76,7 +76,7 @@ class AlbumViewModel: ObservableObject {
         await photoLibraryManager.fetchPhotos()
     }
     
-    @MainActor 
+    @MainActor
     func removePhoto(by id: String, deleteFromCoreData: Bool = true) {
         if let index = photos.firstIndex(where: { $0.id == id }) {
             photos.remove(at: index)
@@ -91,18 +91,19 @@ class AlbumViewModel: ObservableObject {
                 }) { success, error in
                     if success {
                         print("Asset successfully deleted")
+                        DispatchQueue.main.async {
+                            self.refreshPhotos()
+                        }
                     } else if let error = error {
                         print("Error deleting asset: \(error.localizedDescription)")
                     }
                 }
             }
+        } else {
+            DispatchQueue.main.async {
+                self.refreshPhotos()
+            }
         }
-        
-        DispatchQueue.main.async {
-            self.objectWillChange.send()
-        }
-        
-        refreshPhotos()
     }
     
     @MainActor
@@ -118,6 +119,12 @@ class AlbumViewModel: ObservableObject {
         for i in 0..<photos.count {
             photos[i].isFavorite = favoritePhotos.contains { $0.id == photos[i].id }
         }
-        objectWillChange.send()
     }
+    
+    func addNewPhoto(_ photo: Photo) {
+        DispatchQueue.main.async {
+            self.photos.insert(photo, at: 0)
+        }
+    }
+    
 }

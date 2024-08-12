@@ -125,7 +125,6 @@ struct EditFullScreenPhotoView: View {
                             editViewModel.resetEdits()
                             isEditing = false
                             editViewModel.selectedAction = nil
-                            presentationMode.wrappedValue.dismiss()
                         },
                         secondaryButton: .cancel()
                     )
@@ -151,8 +150,11 @@ struct EditFullScreenPhotoView: View {
         editViewModel.saveEditedImage(editedImage: displayedImage) { success in
             isSaving = false
             if success {
+                if let index = albumViewModel.photos.firstIndex(where: { $0.id == viewModel.currentPhoto.id }) {
+                    albumViewModel.photos[index].image = displayedImage
+                }
+                
                 isEditing = false
-                albumViewModel.refreshPhotos()
                 presentationMode.wrappedValue.dismiss()
             } else {
                 showSaveErrorAlert = true

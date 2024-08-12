@@ -71,9 +71,6 @@ struct FavoritesView: View {
                     cropViewModel: cropViewModel
                 )
                 .environmentObject(albumViewModel)
-                .onDisappear {
-                    albumViewModel.refreshPhotos()
-                }
             }
         }
     }

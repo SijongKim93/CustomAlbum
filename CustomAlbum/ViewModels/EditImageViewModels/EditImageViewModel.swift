@@ -50,6 +50,18 @@ class EditImageViewModel: ObservableObject {
             DispatchQueue.main.async {
                 self.isSaving = false
                 if success {
+                    // 새로운 사진을 photos 배열에 추가
+                    let newPhoto = Photo(
+                        id: UUID().uuidString,  // 임시 ID, 실제로는 asset의 localIdentifier를 사용해야 합니다
+                        image: editedImage,
+                        date: Date(),
+                        location: nil,  // 필요한 경우 위치 정보를 추가하세요
+                        isFavorite: false,
+                        asset: nil,  // PHAsset을 가져오는 로직이 필요합니다
+                        assetIdentifier: nil  // PHAsset의 localIdentifier를 가져오는 로직이 필요합니다
+                    )
+                    
+                    self.albumViewModel.addNewPhoto(newPhoto)
                     self.albumViewModel.refreshPhotos()
                     completion(true)
                 } else if let error = error {
