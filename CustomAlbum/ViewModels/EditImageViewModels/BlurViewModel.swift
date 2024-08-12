@@ -23,10 +23,6 @@ class BlurViewModel: ObservableObject {
     func applyBlur(at point: CGPoint, in imageSize: CGSize, imageFrame: CGRect) {
         guard let editedImage = bluredImage else { return }
         
-        // 이미지의 실제 크기와 화면에서의 크기를 기반으로 스케일 계산
-        let imageScaleX = editedImage.size.width / imageFrame.width
-        let imageScaleY = editedImage.size.height / imageFrame.height
-        
         // 이미지가 화면에 맞게 조정된 크기 계산
         let adjustedImageWidth = imageSize.width
         let adjustedImageHeight = imageSize.height
@@ -42,10 +38,9 @@ class BlurViewModel: ObservableObject {
         // 스케일링된 좌표 계산 (Y축 반전 포함)
         let scaledPoint = CGPoint(
             x: relativeX * editedImage.size.width,
-            y: (1 - relativeY) * editedImage.size.height  // Y축 반전
+            y: (1 - relativeY) * editedImage.size.height  // Y
         )
         
-        // 블러 처리
         if let blurredImage = applyBlurToImage(image: editedImage, at: scaledPoint, radius: blurRadius) {
             DispatchQueue.main.async {
                 self.bluredImage = blurredImage

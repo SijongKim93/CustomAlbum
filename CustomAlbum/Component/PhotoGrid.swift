@@ -44,16 +44,24 @@ struct PhotoGrid<PhotoType: Identifiable & Hashable>: View {
             set: { if !$0 { selectedPhotoIndex = nil } }
         )) {
             if let index = selectedPhotoIndex, let image = imageForPhoto(photos[index]) {
-
                 let adjustmentViewModel = AdjustmentViewModel(image: image)
-                let editViewModel = EditImageViewModel(image: image, adjustmentViewModel: adjustmentViewModel)
+                let filterViewModel = EditFilterViewModel()
+                let cropViewModel = EditCropViewModel(image: image)
                 let blurViewModel = BlurViewModel(image: image)
+                let editViewModel = EditImageViewModel(
+                    image: image,
+                    adjustmentViewModel: adjustmentViewModel,
+                    filterViewModel: filterViewModel,
+                    cropViewModel: cropViewModel
+                )
 
                 FullScreenPhotoView(
                     viewModel: FullScreenPhotoViewModel(photos: photos as! [Photo], initialIndex: index),
                     editViewModel: editViewModel,
                     adjustmentViewModel: adjustmentViewModel,
-                    blurViewModel: blurViewModel
+                    blurViewModel: blurViewModel,
+                    filterViewModel: filterViewModel,
+                    cropViewModel: cropViewModel
                 )
                 .toolbar(.hidden, for: .tabBar)
             }

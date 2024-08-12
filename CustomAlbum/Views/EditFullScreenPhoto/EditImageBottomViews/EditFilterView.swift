@@ -7,78 +7,78 @@
 
 import SwiftUI
 
-struct FilterScrollView: View {
-    @ObservedObject var editViewModel: EditImageViewModel
-
+struct EditFilterView: View {
+    @StateObject var editFilterViewModel: EditFilterViewModel
+    var image: UIImage
+    
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 20) {
                 FilterButton(
                     filterName: "Sepia",
                     filterAction: {
-                        editViewModel.applySepiaTone()
+                        editFilterViewModel.applySepiaTone(to: image)
                     },
-                    image: editViewModel.applyPreviewFilter(filterName: "CISepiaTone")
+                    image: editFilterViewModel.applyPreviewFilter(filterName: "CISepiaTone", to: image)
                 )
                 
                 FilterButton(
                     filterName: "Noir",
                     filterAction: {
-                        editViewModel.applyNoir()
+                        editFilterViewModel.applyNoir(to: image)
                     },
-                    image: editViewModel.applyPreviewFilter(filterName: "CIPhotoEffectNoir")
+                    image: editFilterViewModel.applyPreviewFilter(filterName: "CIPhotoEffectNoir", to: image)
                 )
                 
                 FilterButton(
                     filterName: "Chrome",
                     filterAction: {
-                        editViewModel.applyChrome()
+                        editFilterViewModel.applyChrome(to: image)
                     },
-                    image: editViewModel.applyPreviewFilter(filterName: "CIPhotoEffectChrome")
+                    image: editFilterViewModel.applyPreviewFilter(filterName: "CIPhotoEffectChrome", to: image)
                 )
                 
                 FilterButton(
                     filterName: "Instant",
                     filterAction: {
-                        editViewModel.applyInstant()
+                        editFilterViewModel.applyInstant(to: image)
                     },
-                    image: editViewModel.applyPreviewFilter(filterName: "CIPhotoEffectInstant")
+                    image: editFilterViewModel.applyPreviewFilter(filterName: "CIPhotoEffectInstant", to: image)
                 )
                 
                 FilterButton(
                     filterName: "Fade",
                     filterAction: {
-                        editViewModel.applyFade()
+                        editFilterViewModel.applyFade(to: image)
                     },
-                    image: editViewModel.applyPreviewFilter(filterName: "CIPhotoEffectFade")
+                    image: editFilterViewModel.applyPreviewFilter(filterName: "CIPhotoEffectFade", to: image)
                 )
                 
                 FilterButton(
                     filterName: "Mono",
                     filterAction: {
-                        editViewModel.applyMonochrome()
+                        editFilterViewModel.applyMonochrome(to: image)
                     },
-                    image: editViewModel.applyPreviewFilter(filterName: "CIColorMonochrome")
+                    image: editFilterViewModel.applyPreviewFilter(filterName: "CIColorMonochrome", to: image)
                 )
                 
                 FilterButton(
                     filterName: "Poster",
                     filterAction: {
-                        editViewModel.applyPosterize()
+                        editFilterViewModel.applyPosterize(to: image)
                     },
-                    image: editViewModel.applyPreviewFilter(filterName: "CIColorPosterize")
+                    image: editFilterViewModel.applyPreviewFilter(filterName: "CIColorPosterize", to: image)
                 )
                 
                 FilterButton(
                     filterName: "Vignette",
                     filterAction: {
-                        editViewModel.applyVignette()
+                        editFilterViewModel.applyVignette(to: image)
                     },
-                    image: editViewModel.applyPreviewFilter(filterName: "CIVignette")
+                    image: editFilterViewModel.applyPreviewFilter(filterName: "CIVignette", to: image)
                 )
             }
             .padding(.horizontal)
         }
     }
 }
-

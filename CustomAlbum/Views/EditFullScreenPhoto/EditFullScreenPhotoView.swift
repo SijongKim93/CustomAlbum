@@ -7,12 +7,13 @@
 
 import SwiftUI
 
-
 struct EditFullScreenPhotoView: View {
     @ObservedObject var viewModel: FullScreenPhotoViewModel
     @ObservedObject var editViewModel: EditImageViewModel
     @ObservedObject var adjustmentViewModel: AdjustmentViewModel
     @ObservedObject var blurViewModel: BlurViewModel
+    @ObservedObject var filterViewModel: EditFilterViewModel
+    @ObservedObject var cropViewModel: EditCropViewModel
     @StateObject private var zoomHandler = PhotoZoomHandler()
     var animation: Namespace.ID
     @Binding var isEditing: Bool
@@ -34,13 +35,18 @@ struct EditFullScreenPhotoView: View {
             finalImage = adjustedImage
         }
         
-        if editViewModel.selectedAction == .filter, let filteredImage = editViewModel.filteredImage {
+        if editViewModel.selectedAction == .filter, let filteredImage = filterViewModel.filteredImage {
             finalImage = filteredImage
         }
         
         if editViewModel.selectedAction == .blur, let blurredImage = blurViewModel.bluredImage {
             finalImage = blurredImage
         }
+        
+        if editViewModel.selectedAction == .crop, cropViewModel.cropApplied {
+            finalImage = cropViewModel.applyCrop(with: cropViewModel.cropRect, imageViewSize: imageViewSize, to: finalImage) ?? finalImage
+        }
+        
         return finalImage
     }
 
@@ -50,7 +56,7 @@ struct EditFullScreenPhotoView: View {
                 GeometryReader { geometry in
                     Image(uiImage: displayedImage)
                         .resizable()
-                        .rotationEffect(Angle(degrees: Double(editViewModel.rotationAngle)))
+                        .rotationEffect(Angle(degrees: Double(cropViewModel.rotationAngle)))
                         .frame(width: geometry.size.width, height: geometry.size.height * 0.65)
                         .background(Color.black)
                         .matchedGeometryEffect(id: viewModel.currentPhoto.id, in: animation)
@@ -63,7 +69,7 @@ struct EditFullScreenPhotoView: View {
                         .overlay(
                             GeometryReader { geometry in
                                 if editViewModel.selectedAction == .crop {
-                                    CropBox(rect: $editViewModel.cropRect, minSize: CGSize(width: 100, height: 100))
+                                    CropBox(rect: $cropViewModel.cropRect, minSize: CGSize(width: 100, height: 100))
                                         .onAppear {
                                             self.imageViewSize = geometry.size
                                             centerCropBox(in: geometry.size)
@@ -93,15 +99,18 @@ struct EditFullScreenPhotoView: View {
                 }
                 Spacer()
             }
-
+            
             VStack {
                 Spacer()
-                EditBottomView(
+                EditFullScreenPhotoBottomView(
                     viewModel: editViewModel,
+                    filterViewModel: filterViewModel,
+                    cropViewModel: cropViewModel,
                     adjustViewModel: adjustmentViewModel,
-                    cropRect: $editViewModel.cropRect,
+                    blurViewModel: blurViewModel,
+                    cropRect: $cropViewModel.cropRect,
                     imageViewSize: $imageViewSize,
-                    rotationAngle: $editViewModel.rotationAngle
+                    rotationAngle: $cropViewModel.rotationAngle
                 )
                 .alert(isPresented: $showAlert) {
                     Alert(
@@ -128,7 +137,7 @@ struct EditFullScreenPhotoView: View {
         let width = size.width - padding * 2
         let height = size.height * 0.65 - padding * 2
         
-        editViewModel.cropRect = CGRect(
+        cropViewModel.cropRect = CGRect(
             x: (size.width - width) / 2,
             y: (size.height * 0.65 - height) / 2,
             width: width,
