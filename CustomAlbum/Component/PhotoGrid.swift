@@ -44,10 +44,10 @@ struct PhotoGrid<PhotoType: Identifiable & Hashable>: View {
             set: { if !$0 { selectedPhotoIndex = nil } }
         )) {
             if let index = selectedPhotoIndex, let image = imageForPhoto(photos[index]) {
-                let adjustmentViewModel = AdjustmentViewModel(image: image)
+                let adjustmentViewModel = EditAdjustmentViewModel(image: image)
                 let filterViewModel = EditFilterViewModel()
                 let cropViewModel = EditCropViewModel(image: image)
-                let blurViewModel = BlurViewModel(image: image)
+                let blurViewModel = EditBlurViewModel(image: image)
                 let editViewModel = EditImageViewModel(
                     image: image,
                     adjustmentViewModel: adjustmentViewModel,

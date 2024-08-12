@@ -48,7 +48,7 @@ struct FavoritesView: View {
         )) {
             if let index = selectedPhotoIndex {
                 let selectedImage = viewModel.favoritePhotos[index].image
-                let adjustmentViewModel = AdjustmentViewModel(image: selectedImage)
+                let adjustmentViewModel = EditAdjustmentViewModel(image: selectedImage)
                 let editFilterViewModel = EditFilterViewModel()
                 let cropViewModel = EditCropViewModel(image: selectedImage)
                 let editViewModel = EditImageViewModel(
@@ -65,7 +65,7 @@ struct FavoritesView: View {
                     ),
                     editViewModel: editViewModel,
                     adjustmentViewModel: adjustmentViewModel,
-                    blurViewModel: BlurViewModel(image: selectedImage),
+                    blurViewModel: EditBlurViewModel(image: selectedImage),
                     filterViewModel: editFilterViewModel,
                     cropViewModel: cropViewModel
                 )

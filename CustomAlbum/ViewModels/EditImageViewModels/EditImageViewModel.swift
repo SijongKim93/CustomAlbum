@@ -13,11 +13,11 @@ class EditImageViewModel: ObservableObject {
     @Published var originalImage: UIImage
     @Published var filteredImage: UIImage?
     
-    @ObservedObject var adjustmentViewModel: AdjustmentViewModel
+    @ObservedObject var adjustmentViewModel: EditAdjustmentViewModel
     @ObservedObject var filterViewModel: EditFilterViewModel
     @ObservedObject var cropViewModel: EditCropViewModel
     
-    init(image: UIImage, adjustmentViewModel: AdjustmentViewModel, filterViewModel: EditFilterViewModel, cropViewModel: EditCropViewModel) {
+    init(image: UIImage, adjustmentViewModel: EditAdjustmentViewModel, filterViewModel: EditFilterViewModel, cropViewModel: EditCropViewModel) {
         self.originalImage = image
         self.adjustmentViewModel = adjustmentViewModel
         self.filterViewModel = filterViewModel

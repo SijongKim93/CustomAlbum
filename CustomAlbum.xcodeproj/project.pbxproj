@@ -32,8 +32,8 @@
 		4D048E092C68BBB30026932D /* EditAdjustmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048E082C68BBB30026932D /* EditAdjustmentView.swift */; };
 		4D048E0B2C68C5350026932D /* EditAdjustmentControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048E0A2C68C5350026932D /* EditAdjustmentControlView.swift */; };
 		4D048E0D2C68FC940026932D /* AdjustmentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048E0C2C68FC940026932D /* AdjustmentButton.swift */; };
-		4D048E112C690E390026932D /* BlurViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048E102C690E390026932D /* BlurViewModel.swift */; };
-		4D048E162C6910770026932D /* AdjustmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048E152C6910770026932D /* AdjustmentViewModel.swift */; };
+		4D048E112C690E390026932D /* EditBlurViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048E102C690E390026932D /* EditBlurViewModel.swift */; };
+		4D048E162C6910770026932D /* EditAdjustmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048E152C6910770026932D /* EditAdjustmentViewModel.swift */; };
 		4D048E1A2C6953E10026932D /* AdjustmentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048E192C6953E10026932D /* AdjustmentService.swift */; };
 		4D048E1C2C69CCE70026932D /* EditFullScreenPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048E1B2C69CCE70026932D /* EditFullScreenPhotoView.swift */; };
 		4D048E212C69E7690026932D /* EditFilterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D048E202C69E7690026932D /* EditFilterViewModel.swift */; };
@@ -79,8 +79,8 @@
 		4D048E082C68BBB30026932D /* EditAdjustmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAdjustmentView.swift; sourceTree = "<group>"; };
 		4D048E0A2C68C5350026932D /* EditAdjustmentControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAdjustmentControlView.swift; sourceTree = "<group>"; };
 		4D048E0C2C68FC940026932D /* AdjustmentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustmentButton.swift; sourceTree = "<group>"; };
-		4D048E102C690E390026932D /* BlurViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurViewModel.swift; sourceTree = "<group>"; };
-		4D048E152C6910770026932D /* AdjustmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustmentViewModel.swift; sourceTree = "<group>"; };
+		4D048E102C690E390026932D /* EditBlurViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBlurViewModel.swift; sourceTree = "<group>"; };
+		4D048E152C6910770026932D /* EditAdjustmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAdjustmentViewModel.swift; sourceTree = "<group>"; };
 		4D048E192C6953E10026932D /* AdjustmentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdjustmentService.swift; sourceTree = "<group>"; };
 		4D048E1B2C69CCE70026932D /* EditFullScreenPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFullScreenPhotoView.swift; sourceTree = "<group>"; };
 		4D048E202C69E7690026932D /* EditFilterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFilterViewModel.swift; sourceTree = "<group>"; };
@@ -165,8 +165,8 @@
 				4D048DD82C67C7530026932D /* EditImageViewModel.swift */,
 				4D048E202C69E7690026932D /* EditFilterViewModel.swift */,
 				4D048E222C69F4040026932D /* EditCropViewModel.swift */,
-				4D048E152C6910770026932D /* AdjustmentViewModel.swift */,
-				4D048E102C690E390026932D /* BlurViewModel.swift */,
+				4D048E152C6910770026932D /* EditAdjustmentViewModel.swift */,
+				4D048E102C690E390026932D /* EditBlurViewModel.swift */,
 			);
 			path = EditImageViewModels;
 			sourceTree = "<group>";
@@ -221,8 +221,8 @@
 			isa = PBXGroup;
 			children = (
 				4DB2FE042C639E3F00CD67EF /* CustomAlbumApp.swift */,
-				4DB2FE1B2C63A01D00CD67EF /* Managers */,
 				4DB2FE162C639FE100CD67EF /* Models */,
+				4DB2FE1B2C63A01D00CD67EF /* Managers */,
 				4D048D822C63D6B50026932D /* Views */,
 				4DB2FE182C639FEC00CD67EF /* ViewModels */,
 				4D048DE02C67E10F0026932D /* CoreImageService */,
@@ -368,9 +368,9 @@
 				4DB2FE232C63A49400CD67EF /* AlbumViewModel.swift in Sources */,
 				4D048D812C63D6340026932D /* FullScreenPhotoView.swift in Sources */,
 				4D048E0B2C68C5350026932D /* EditAdjustmentControlView.swift in Sources */,
-				4D048E162C6910770026932D /* AdjustmentViewModel.swift in Sources */,
+				4D048E162C6910770026932D /* EditAdjustmentViewModel.swift in Sources */,
 				4D048DCC2C66259E0026932D /* InfoView.swift in Sources */,
-				4D048E112C690E390026932D /* BlurViewModel.swift in Sources */,
+				4D048E112C690E390026932D /* EditBlurViewModel.swift in Sources */,
 				4D048E1A2C6953E10026932D /* AdjustmentService.swift in Sources */,
 				4DB2FE292C63B07000CD67EF /* PhotoGridItem.swift in Sources */,
 				4D048DF22C686B120026932D /* CropBox.swift in Sources */,

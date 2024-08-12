@@ -17,9 +17,9 @@ enum EditAction {
 struct EditActionView: View {
     @Binding var selectedAction: EditAction?
     @StateObject var editViewModel: EditImageViewModel
-    @ObservedObject var adjustViewModel: AdjustmentViewModel
+    @ObservedObject var adjustViewModel: EditAdjustmentViewModel
     @ObservedObject var filterViewModel: EditFilterViewModel
-    @ObservedObject var blurViewModel: BlurViewModel
+    @ObservedObject var blurViewModel: EditBlurViewModel
     @ObservedObject var cropViewModel: EditCropViewModel // 추가된 부분
     @Binding var cropRect: CGRect
     @Binding var imageViewSize: CGSize

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class AdjustmentViewModel: ObservableObject {
+class EditAdjustmentViewModel: ObservableObject {
     @Published var brightness: Double = 0.0
     @Published var contrast: Double = 1.0
     @Published var saturation: Double = 1.0

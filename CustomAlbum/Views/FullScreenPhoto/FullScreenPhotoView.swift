@@ -9,15 +9,17 @@ import SwiftUI
 
 struct FullScreenPhotoView: View {
     @EnvironmentObject var albumViewModel: AlbumViewModel
+    
     @ObservedObject var viewModel: FullScreenPhotoViewModel
     @ObservedObject var editViewModel: EditImageViewModel
-    @ObservedObject var adjustmentViewModel: AdjustmentViewModel
-    @ObservedObject var blurViewModel: BlurViewModel
+    @ObservedObject var adjustmentViewModel: EditAdjustmentViewModel
+    @ObservedObject var blurViewModel: EditBlurViewModel
     @ObservedObject var filterViewModel: EditFilterViewModel
     @ObservedObject var cropViewModel: EditCropViewModel
     @StateObject private var zoomHandler = PhotoZoomHandler()
     @State private var isEditing = false
     @Namespace private var animation
+    @Environment(\.presentationMode) var presentationMode
     
     private var displayedImage: UIImage {
         var finalImage = viewModel.currentPhoto.image
@@ -125,6 +127,12 @@ struct FullScreenPhotoView: View {
         .background(Color.black.edgesIgnoringSafeArea(.all))
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(trailing: editButton)
+        .onChange(of: viewModel.shouldDismiss) { _, shouldDismiss in
+            if shouldDismiss {
+                albumViewModel.removePhoto(by: viewModel.currentPhoto.id)
+                presentationMode.wrappedValue.dismiss()
+            }
+        }
     }
     
     private var editButton: some View {

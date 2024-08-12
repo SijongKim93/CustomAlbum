@@ -11,8 +11,8 @@ struct EditFullScreenPhotoBottomView: View {
     @ObservedObject var viewModel: EditImageViewModel
     @ObservedObject var filterViewModel: EditFilterViewModel
     @ObservedObject var cropViewModel: EditCropViewModel
-    @ObservedObject var adjustViewModel: AdjustmentViewModel
-    @ObservedObject var blurViewModel: BlurViewModel
+    @ObservedObject var adjustViewModel: EditAdjustmentViewModel
+    @ObservedObject var blurViewModel: EditBlurViewModel
     @Binding var cropRect: CGRect
     @Binding var imageViewSize: CGSize
     @Binding var rotationAngle: CGFloat

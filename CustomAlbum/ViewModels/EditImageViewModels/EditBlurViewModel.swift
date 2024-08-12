@@ -9,7 +9,7 @@ import SwiftUI
 import CoreImage
 import CoreImage.CIFilterBuiltins
 
-class BlurViewModel: ObservableObject {
+class EditBlurViewModel: ObservableObject {
     @Published var bluredImage: UIImage?
     private let context = CIContext()
     private let blurRadius: CGFloat = 10.0

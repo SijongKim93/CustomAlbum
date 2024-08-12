@@ -54,5 +54,8 @@ struct AlbumView: View {
                 viewModel.refreshPhotos()
             }
         }
+        .onChange(of: selectedPhotoIndex) { newValue, oldValue in
+            viewModel.refreshPhotos()
+        }
     }
 }

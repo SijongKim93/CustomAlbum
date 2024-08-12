@@ -10,8 +10,8 @@ import SwiftUI
 struct EditFullScreenPhotoView: View {
     @ObservedObject var viewModel: FullScreenPhotoViewModel
     @ObservedObject var editViewModel: EditImageViewModel
-    @ObservedObject var adjustmentViewModel: AdjustmentViewModel
-    @ObservedObject var blurViewModel: BlurViewModel
+    @ObservedObject var adjustmentViewModel: EditAdjustmentViewModel
+    @ObservedObject var blurViewModel: EditBlurViewModel
     @ObservedObject var filterViewModel: EditFilterViewModel
     @ObservedObject var cropViewModel: EditCropViewModel
     @StateObject private var zoomHandler = PhotoZoomHandler()

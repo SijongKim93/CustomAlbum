@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EditAdjustmentView: View {
-    @StateObject var viewModel: AdjustmentViewModel
+    @StateObject var viewModel: EditAdjustmentViewModel
     @State private var selectedAdjustment: String = "선명도"
     
     var body: some View {
