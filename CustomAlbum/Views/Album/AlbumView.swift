@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AlbumView: View {
-    @StateObject private var viewModel = AlbumViewModel()
+    @EnvironmentObject var viewModel: AlbumViewModel
     @Namespace private var animation
     @State private var selectedPhotoIndex: Int?
     @Binding var tabSelection: Int
@@ -31,14 +31,13 @@ struct AlbumView: View {
                 },
                 imageForPhoto: { photo in
                     photo.image
-                }, 
+                },
                 isFavorite: { photo in
                     photo.isFavorite
                 }
             )
             .navigationTitle("My Album")
         }
-        .environmentObject(viewModel)
         .task {
             viewModel.checkAndRequestPermission()
         }
@@ -47,12 +46,6 @@ struct AlbumView: View {
                 viewModel.fetchPhotosIfAuthorized()
             }
             viewModel.refreshPhotos()
-        }
-        .onChange(of: tabSelection) { oldValue, newValue in
-            if newValue == 0 {
-                print("Tab changed to AlbumView")
-                viewModel.refreshPhotos()
-            }
         }
         .onChange(of: selectedPhotoIndex) { newValue, oldValue in
             viewModel.refreshPhotos()

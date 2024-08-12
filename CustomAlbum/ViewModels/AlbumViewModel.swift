@@ -74,10 +74,9 @@ class AlbumViewModel: ObservableObject {
     
     private func fetchPhotos() async {
         await photoLibraryManager.fetchPhotos()
-        print("Photos fetched")
     }
     
-    @MainActor 
+    @MainActor
     func removePhoto(by id: String, deleteFromCoreData: Bool = true) {
         if let index = photos.firstIndex(where: { $0.id == id }) {
             photos.remove(at: index)
@@ -92,27 +91,26 @@ class AlbumViewModel: ObservableObject {
                 }) { success, error in
                     if success {
                         print("Asset successfully deleted")
+                        DispatchQueue.main.async {
+                            self.refreshPhotos()
+                        }
                     } else if let error = error {
                         print("Error deleting asset: \(error.localizedDescription)")
                     }
                 }
             }
+        } else {
+            DispatchQueue.main.async {
+                self.refreshPhotos()
+            }
         }
-        
-        DispatchQueue.main.async {
-            self.objectWillChange.send()
-        }
-        
-        refreshPhotos()
     }
     
     @MainActor
     func refreshPhotos() {
-        print("Refreshing photos...")
         Task {
             await fetchPhotos()
             updateFavoriteStates()
-            //printSpecificPhotos()
         }
     }
     
@@ -121,24 +119,12 @@ class AlbumViewModel: ObservableObject {
         for i in 0..<photos.count {
             photos[i].isFavorite = favoritePhotos.contains { $0.id == photos[i].id }
         }
-        objectWillChange.send()
     }
     
-    private func printSpecificPhotos() {
-        let indices = [0, 1, 2]
-        for index in indices {
-            if index < photos.count {
-                let photo = photos[index]
-                print("Photo at index \(index):")
-                print("  ID: \(photo.id)")
-                print("  Is Favorite: \(photo.isFavorite)")
-                print("  Date: \(photo.date?.description ?? "N/A")")
-                print("  Location: \(photo.location ?? "N/A")")
-                print("  Asset Identifier: \(photo.assetIdentifier ?? "N/A")")
-                print("--------------------")
-            } else {
-                print("Photo at index \(index) does not exist.")
-            }
+    func addNewPhoto(_ photo: Photo) {
+        DispatchQueue.main.async {
+            self.photos.insert(photo, at: 0)
         }
     }
+    
 }

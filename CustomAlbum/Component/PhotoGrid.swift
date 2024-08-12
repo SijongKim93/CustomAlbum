@@ -46,13 +46,15 @@ struct PhotoGrid<PhotoType: Identifiable & Hashable>: View {
             if let index = selectedPhotoIndex, let image = imageForPhoto(photos[index]) {
                 let adjustmentViewModel = EditAdjustmentViewModel(image: image)
                 let filterViewModel = EditFilterViewModel()
+                let albumViewModel = AlbumViewModel()
                 let cropViewModel = EditCropViewModel(image: image)
                 let blurViewModel = EditBlurViewModel(image: image)
                 let editViewModel = EditImageViewModel(
                     image: image,
                     adjustmentViewModel: adjustmentViewModel,
                     filterViewModel: filterViewModel,
-                    cropViewModel: cropViewModel
+                    cropViewModel: cropViewModel, 
+                    albumViewModel: albumViewModel
                 )
 
                 FullScreenPhotoView(

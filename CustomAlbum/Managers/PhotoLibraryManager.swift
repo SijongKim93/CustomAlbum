@@ -61,6 +61,9 @@ class PhotoLibraryManager: ObservableObject {
                 !self.photos.contains(where: { $0.id == newPhoto.id })
             }
             self.photos.append(contentsOf: newUniquePhotos)
+            
+            self.photos.sort { $0.date ?? Date() > $1.date ?? Date() }
+            
             lastFetchIndex = endIndex
             hasMorePhotos = endIndex < assets.count
             isFetching = false

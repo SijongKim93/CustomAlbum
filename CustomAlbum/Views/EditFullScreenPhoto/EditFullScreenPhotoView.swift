@@ -17,12 +17,17 @@ struct EditFullScreenPhotoView: View {
     @StateObject private var zoomHandler = PhotoZoomHandler()
     var animation: Namespace.ID
     @Binding var isEditing: Bool
+    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var albumViewModel: AlbumViewModel
     @State private var showAlert = false
+    @State private var showSaveAlert = false
     @State private var imageViewSize: CGSize = .zero
+    @State private var isSaving = false
+    @State private var showSaveErrorAlert = false
     
     private var imageOffset: CGFloat {
         if editViewModel.selectedAction == .adjustment {
-            return -100
+            return -80
         } else {
             return 0
         }
@@ -43,13 +48,15 @@ struct EditFullScreenPhotoView: View {
             finalImage = blurredImage
         }
         
-        if editViewModel.selectedAction == .crop, cropViewModel.cropApplied {
-            finalImage = cropViewModel.applyCrop(with: cropViewModel.cropRect, imageViewSize: imageViewSize, to: finalImage) ?? finalImage
+        if editViewModel.selectedAction == .crop, let croppedImage = cropViewModel.croppedImage {
+            return croppedImage
         }
         
         return finalImage
     }
-
+    
+    
+    
     var body: some View {
         ZStack {
             VStack {
@@ -63,17 +70,15 @@ struct EditFullScreenPhotoView: View {
                         .scaleEffect(zoomHandler.currentScale)
                         .offset(y: imageOffset)
                         .onAppear {
-                            self.imageViewSize = geometry.size
-                            centerCropBox(in: geometry.size)
+                            let imageSize = viewModel.currentPhoto.image.size
+                            let viewSize = CGSize(width: geometry.size.width, height: geometry.size.height * 0.65)
+                            cropViewModel.initializeCropBox(for: imageSize, in: viewSize)
+                            self.imageViewSize = viewSize
                         }
                         .overlay(
-                            GeometryReader { geometry in
-                                if editViewModel.selectedAction == .crop {
+                            Group {
+                                if editViewModel.selectedAction == .crop && cropViewModel.isCropBoxVisible {
                                     CropBox(rect: $cropViewModel.cropRect, minSize: CGSize(width: 100, height: 100))
-                                        .onAppear {
-                                            self.imageViewSize = geometry.size
-                                            centerCropBox(in: geometry.size)
-                                        }
                                 }
                             }
                         )
@@ -127,9 +132,34 @@ struct EditFullScreenPhotoView: View {
             }
         }
         .background(Color.black.edgesIgnoringSafeArea(.all))
-        .navigationBarItems(trailing: Button("취소") {
-            showAlert = true
-        })
+        .navigationBarItems(
+            trailing: HStack(spacing: 25) {
+                Button("취소") {
+                    showAlert = true
+                }
+                Button("저장") {
+                    saveEditedImage()
+                }
+            }
+        )
+    }
+    
+    private func saveEditedImage() {
+        isSaving = true
+        
+        editViewModel.saveEditedImage(editedImage: displayedImage) { success in
+            isSaving = false
+            if success {
+                if let index = albumViewModel.photos.firstIndex(where: { $0.id == viewModel.currentPhoto.id }) {
+                    albumViewModel.photos[index].image = displayedImage
+                }
+                
+                isEditing = false
+                presentationMode.wrappedValue.dismiss()
+            } else {
+                showSaveErrorAlert = true
+            }
+        }
     }
     
     private func centerCropBox(in size: CGSize) {

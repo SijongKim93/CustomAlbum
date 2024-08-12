@@ -15,11 +15,7 @@ class EditAdjustmentViewModel: ObservableObject {
     @Published var exposure: Double = 0.0
     @Published var vibrance: Double = 0.0
     @Published var highlight: Double = 0.5
-    @Published var adjustedImage: UIImage? {
-        willSet {
-            objectWillChange.send()
-        }
-    }
+    @Published var adjustedImage: UIImage? 
     
     private let adjustmentService = AdjustmentService()
     var originalImage: UIImage

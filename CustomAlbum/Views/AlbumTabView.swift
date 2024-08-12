@@ -26,13 +26,6 @@ struct AlbumTabView: View {
                         Text("Favorite")
                     }
                     .tag(1)
-                
-                MapView()
-                    .tabItem {
-                        Image(systemName: "map")
-                        Text("Map")
-                    }
-                    .tag(2)
             }
             .accentColor(Color(UIColor.systemIndigo))
         }

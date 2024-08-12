@@ -107,13 +107,11 @@ class FullScreenPhotoViewModel: ObservableObject {
         if let asset = assetToDelete {
             deleteAsset(asset)
         } else {
-            print("Asset 데이터를 찾을 수 없음")
             CoreDataManager.shared.deleteFavoritePhoto(by: self.currentPhoto.id)
             self.photos.remove(at: currentPhotoIndex)
             self.shouldDismiss = true
         }
     }
-
     
     private func deleteAsset(_ asset: PHAsset) {
         PHPhotoLibrary.shared().performChanges({

@@ -55,7 +55,8 @@ struct FavoritesView: View {
                     image: selectedImage,
                     adjustmentViewModel: adjustmentViewModel,
                     filterViewModel: editFilterViewModel,
-                    cropViewModel: cropViewModel
+                    cropViewModel: cropViewModel, 
+                    albumViewModel: albumViewModel
                 )
                 
                 FullScreenPhotoView(
@@ -70,9 +71,6 @@ struct FavoritesView: View {
                     cropViewModel: cropViewModel
                 )
                 .environmentObject(albumViewModel)
-                .onDisappear {
-                    albumViewModel.refreshPhotos()
-                }
             }
         }
     }
