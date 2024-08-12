@@ -9,14 +9,25 @@ import SwiftUI
 
 struct EditBottomView: View {
     @ObservedObject var viewModel: EditImageViewModel
+    @ObservedObject var adjustViewModel: AdjustmentViewModel
     @Binding var cropRect: CGRect
     @Binding var imageViewSize: CGSize
     @Binding var rotationAngle: CGFloat
+    
+    
+
 
     var body: some View {
         VStack {
             if viewModel.selectedAction != nil {
-                EditActionView(selectedAction: $viewModel.selectedAction, editViewModel: viewModel, cropRect: $cropRect, imageViewSize: $imageViewSize, rotationAngle: $rotationAngle)
+                EditActionView(
+                    selectedAction: $viewModel.selectedAction,
+                    editViewModel: viewModel,
+                    adjustViewModel: adjustViewModel,
+                    cropRect: $cropRect,
+                    imageViewSize: $imageViewSize,
+                    rotationAngle: $rotationAngle
+                )
             }
             HStack {
                 Button(action: {
@@ -27,7 +38,7 @@ struct EditBottomView: View {
                     VStack {
                         Image(systemName: "camera.filters")
                             .font(.system(size: 24))
-                            .foregroundColor(.black)
+                            .foregroundColor(viewModel.selectedAction == .filter ? Color(UIColor.systemIndigo) : .black)
                     }
                 }
                 .padding()
@@ -42,7 +53,7 @@ struct EditBottomView: View {
                     VStack {
                         Image(systemName: "crop")
                             .font(.system(size: 24))
-                            .foregroundColor(.black)
+                            .foregroundColor(viewModel.selectedAction == .crop ? Color(UIColor.systemIndigo) : .black)
                     }
                 }
                 .padding()
@@ -51,13 +62,13 @@ struct EditBottomView: View {
                 
                 Button(action: {
                     withAnimation {
-                        viewModel.toggleCollage()
+                        viewModel.toggleAdjustment()
                     }
                 }) {
                     VStack {
-                        Image(systemName: "rectangle.3.offgrid")
+                        Image(systemName: "microbe.circle")
                             .font(.system(size: 24))
-                            .foregroundColor(.black)
+                            .foregroundColor(viewModel.selectedAction == .adjustment ? Color(UIColor.systemIndigo) : .black)
                     }
                 }
                 .padding()
@@ -66,18 +77,18 @@ struct EditBottomView: View {
                 
                 Button(action: {
                     withAnimation {
-                        viewModel.togglePortraitMode()
+                        viewModel.toggleDraw()
                     }
                 }) {
                     VStack {
-                        Image(systemName: "person.crop.rectangle")
+                        Image(systemName: "eye.slash")
                             .font(.system(size: 24))
-                            .foregroundColor(.black)
+                            .foregroundColor(viewModel.selectedAction == .blur ? Color(UIColor.systemIndigo) : .black)
                     }
                 }
                 .padding()
             }
-            .background(Color(UIColor.systemGray6))
+            .background(Color.white)
             .ignoresSafeArea()
         }
     }

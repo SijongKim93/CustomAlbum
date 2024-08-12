@@ -6,37 +6,35 @@
 //
 
 import SwiftUI
+import CoreImage
 
 class EditImageViewModel: ObservableObject {
     @Published var filterApplied: Bool = false
     @Published var cropApplied: Bool = false
-    @Published var collageApplied: Bool = false
-    @Published var portraitModeApplied: Bool = false
     @Published var selectedAction: EditAction?
     @Published var originalImage: UIImage
-    @Published var editedImage: UIImage?
+    @Published var filteredImage: UIImage?
     @Published var cropRect: CGRect = .zero
     @Published var rotationAngle: CGFloat = 0.0
+    
+    @ObservedObject var adjustmentViewModel: AdjustmentViewModel
     
     private let filterService = ImageFilterService()
     private let cropService = ImageCropService()
     
-    init(image: UIImage) {
+    init(image: UIImage, adjustmentViewModel: AdjustmentViewModel) {
         self.originalImage = image
-        self.editedImage = image
-        self.cropRect = CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height)
+        self.filteredImage = image
+        self.adjustmentViewModel = adjustmentViewModel
     }
     
     func resetEdits() {
-        editedImage = originalImage
+        filteredImage = originalImage
         filterApplied = false
         cropApplied = false
-        collageApplied = false
-        portraitModeApplied = false
         rotationAngle = 0.0
         selectedAction = nil
     }
-    
     
     // MARK: - Edit Button
     func toggleFilter() {
@@ -47,12 +45,18 @@ class EditImageViewModel: ObservableObject {
         selectedAction = selectedAction == .crop ? nil : .crop
     }
     
-    func toggleCollage() {
-        selectedAction = selectedAction == .collage ? nil : .collage
+    func toggleAdjustment() {
+        if selectedAction == .adjustment {
+            filteredImage = originalImage
+            selectedAction = nil
+        } else {
+            resetFilters()
+            selectedAction = .adjustment
+        }
     }
     
-    func togglePortraitMode() {
-        selectedAction = selectedAction == .portraitMode ? nil : .portraitMode
+    func toggleDraw() {
+        selectedAction = selectedAction == .blur ? nil : .blur
     }
     
     // MARK: - Filter
@@ -92,10 +96,16 @@ class EditImageViewModel: ObservableObject {
     // MARK: - Filter 적용
     
     func applyFilter(named filterName: String) {
-        if let filteredImage = filterService.applyFilter(originalImage, filterName: filterName) {
-            editedImage = filteredImage
+        let baseImage = originalImage
+        if let filterImage = filterService.applyFilter(baseImage, filterName: filterName) {
+            filteredImage = filterImage
             filterApplied = true
         }
+    }
+    
+    private func resetFilters() {
+        filterApplied = false
+        filteredImage = originalImage
     }
     
     func applyPreviewFilter(filterName: String) -> UIImage {
@@ -108,7 +118,7 @@ class EditImageViewModel: ObservableObject {
     // MARK: - Crop 적용
     
     func applyCrop(with rect: CGRect, imageViewSize: CGSize) {
-        guard let image = editedImage else { return }
+        guard let image = filteredImage else { return }
         let scaleX = image.size.width / imageViewSize.width
         let scaleY = image.size.height / imageViewSize.height
         let scaledCropArea = CGRect(
@@ -119,22 +129,22 @@ class EditImageViewModel: ObservableObject {
         )
         
         if let croppedCGImage = image.cgImage?.cropping(to: scaledCropArea) {
-            editedImage = UIImage(cgImage: croppedCGImage)
+            filteredImage = UIImage(cgImage: croppedCGImage)
             cropApplied = true
         }
     }
     
     func cropToSquare() {
         if let croppedImage = cropService.cropImageToSquare(originalImage) {
-            editedImage = croppedImage
+            filteredImage = croppedImage
             cropApplied = true
         }
     }
     
     func resetCrop() {
         cropRect = CGRect(x: 0, y: 0, width: originalImage.size.width, height: originalImage.size.height)
-        editedImage = originalImage
-        rotationAngle = 0.0  // 초기화 시 회전 각도도 초기화
+        filteredImage = originalImage
+        rotationAngle = 0.0
     }
     
     func setCropAspectRatio(_ aspectRatio: CGFloat, imageViewSize: CGSize) {
@@ -177,19 +187,23 @@ class EditImageViewModel: ObservableObject {
         if rotationAngle >= 360 { rotationAngle = 0 }
         applyRotation()
     }
-    
+
     func rotateImageLeft() {
         rotationAngle -= 90
         if rotationAngle < 0 { rotationAngle += 360 }
         applyRotation()
     }
-    
-    private func applyRotation() {
-        guard let cgImage = editedImage?.cgImage else { return }
+
+    func applyRotation() {
+        guard let cgImage = filteredImage?.cgImage else {
+            print("회전 적용 실패: editedImage가 없음")
+            return
+        }
         let newOrientation: UIImage.Orientation = rotationAngle == 90 ? .right :
         rotationAngle == 180 ? .down :
         rotationAngle == 270 ? .left : .up
-        let rotatedImage = UIImage(cgImage: cgImage, scale: editedImage!.scale, orientation: newOrientation)
-        editedImage = rotatedImage
+        let rotatedImage = UIImage(cgImage: cgImage, scale: filteredImage!.scale, orientation: newOrientation)
+        filteredImage = rotatedImage
+        print("회전 적용됨: \(rotationAngle)도")
     }
 }

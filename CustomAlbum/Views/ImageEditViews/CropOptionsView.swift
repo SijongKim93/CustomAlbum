@@ -45,7 +45,7 @@ struct CropOptionsView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.horizontal)
+        .padding()
         .onChange(of: imageViewSize) { _, newSize in
             editViewModel.setCropBoxToOriginalAspectRatio(imageViewSize: newSize)
             self.cropRect = editViewModel.cropRect

@@ -25,7 +25,7 @@ struct PhotoGridItem: View {
             
             if isFavorite {
                 Image(systemName: "star.fill")
-                    .foregroundColor(.pink)
+                    .foregroundColor(Color(UIColor.systemIndigo))
                     .padding(6)
             }
         }

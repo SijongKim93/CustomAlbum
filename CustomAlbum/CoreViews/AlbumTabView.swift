@@ -34,6 +34,7 @@ struct AlbumTabView: View {
                     }
                     .tag(2)
             }
+            .accentColor(Color(UIColor.systemIndigo))
         }
     }
 }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PhotoBottomView: View {
+struct FullScreenPhotoBottomView: View {
     var onShare: () -> Void
     var onFavorite: () -> Void
     var onInfo: () -> Void
@@ -31,7 +31,7 @@ struct PhotoBottomView: View {
                 VStack {
                     Image(systemName: isFavorite ? "star.fill" : "star")
                         .font(.system(size: 24))
-                        .foregroundColor(isFavorite ? .pink : .white)
+                        .foregroundColor(isFavorite ? Color(UIColor.systemIndigo) : .white)
                 }
             }
             .padding()

@@ -7,19 +7,23 @@
 
 import SwiftUI
 
+
 enum EditAction {
     case filter
     case crop
-    case collage
-    case portraitMode
+    case adjustment
+    case blur
 }
 
 struct EditActionView: View {
     @Binding var selectedAction: EditAction?
-    @ObservedObject var editViewModel: EditImageViewModel
+    @StateObject var editViewModel: EditImageViewModel
+    @ObservedObject var adjustViewModel: AdjustmentViewModel
     @Binding var cropRect: CGRect
     @Binding var imageViewSize: CGSize
     @Binding var rotationAngle: CGFloat
+    
+    
     
     var body: some View {
         VStack {
@@ -29,10 +33,12 @@ struct EditActionView: View {
                     FilterScrollView(editViewModel: editViewModel)
                 case .crop:
                     CropOptionsView(editViewModel: editViewModel, cropRect: $cropRect, imageViewSize: $imageViewSize)
-                case .collage:
-                    Text("콜라주 편집 UI")
-                case .portraitMode:
-                    Text("인물 모드 편집 UI")
+                case .adjustment:
+                    AdjustmentView(viewModel: adjustViewModel)
+                case .blur:
+                    Text("블러 효과를 적용 중입니다. \n화면을 터치하여 블러를 적용하세요.")
+                        .foregroundColor(.white)
+                        .padding()
                 }
             }
         }
@@ -40,6 +46,7 @@ struct EditActionView: View {
         .background(Color.black)
         .transition(.move(edge: .bottom))
     }
+    
     
     private func setCropBoxAspectRatio(_ ratio: CGFloat) {
             let width = min(imageViewSize.width, imageViewSize.height * ratio)
