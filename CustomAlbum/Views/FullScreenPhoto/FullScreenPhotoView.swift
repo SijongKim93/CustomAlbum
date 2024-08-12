@@ -5,7 +5,6 @@
 //  Created by 김시종 on 8/8/24.
 //
 
-
 import SwiftUI
 
 struct FullScreenPhotoView: View {
@@ -14,20 +13,36 @@ struct FullScreenPhotoView: View {
     @ObservedObject var editViewModel: EditImageViewModel
     @ObservedObject var adjustmentViewModel: AdjustmentViewModel
     @ObservedObject var blurViewModel: BlurViewModel
+    @ObservedObject var filterViewModel: EditFilterViewModel
+    @ObservedObject var cropViewModel: EditCropViewModel
     @StateObject private var zoomHandler = PhotoZoomHandler()
     @State private var isEditing = false
     @Namespace private var animation
     
     private var displayedImage: UIImage {
-        if isEditing {
-            return editViewModel.filteredImage ?? viewModel.currentPhoto.image
-        } else {
-            return viewModel.currentPhoto.image
+        var finalImage = viewModel.currentPhoto.image
+        
+        if editViewModel.selectedAction == .adjustment, let adjustedImage = adjustmentViewModel.adjustedImage {
+            finalImage = adjustedImage
         }
+        
+        if editViewModel.selectedAction == .filter, let filteredImage = filterViewModel.filteredImage {
+            finalImage = filteredImage
+        }
+        
+        if editViewModel.selectedAction == .blur, let blurredImage = blurViewModel.bluredImage {
+            finalImage = blurredImage
+        }
+        
+        if editViewModel.selectedAction == .crop, cropViewModel.cropApplied {
+            finalImage = cropViewModel.applyCrop(with: cropViewModel.cropRect, imageViewSize: CGSize.zero, to: finalImage) ?? finalImage
+        }
+        
+        return finalImage
     }
     
     private var rotationAngle: CGFloat {
-        return editViewModel.rotationAngle
+        return cropViewModel.rotationAngle
     }
 
     var body: some View {
@@ -100,6 +115,8 @@ struct FullScreenPhotoView: View {
                     editViewModel: editViewModel,
                     adjustmentViewModel: adjustmentViewModel,
                     blurViewModel: blurViewModel,
+                    filterViewModel: filterViewModel,
+                    cropViewModel: cropViewModel,
                     animation: animation,
                     isEditing: $isEditing
                 )

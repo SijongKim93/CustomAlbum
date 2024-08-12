@@ -1,5 +1,5 @@
 //
-//  CropToolView.swift
+//  EditCropView.swift
 //  CustomAlbum
 //
 //  Created by 김시종 on 8/11/24.
@@ -7,39 +7,41 @@
 
 import SwiftUI
 
-struct CropOptionsView: View {
-    @ObservedObject var editViewModel: EditImageViewModel
+struct EditCropView: View {
+    @ObservedObject var cropViewModel: EditCropViewModel
     @Binding var cropRect: CGRect
     @Binding var imageViewSize: CGSize
     
     var body: some View {
         HStack(spacing: 30) {
             CropOptionButton(optionName: "1:1") {
-                editViewModel.setCropAspectRatio(1, imageViewSize: imageViewSize)
+                cropViewModel.setCropAspectRatio(1, imageViewSize: imageViewSize)
                 DispatchQueue.main.async {
-                    self.cropRect = editViewModel.cropRect
+                    self.cropRect = cropViewModel.cropRect
                 }
             }
             
             CropOptionButton(optionName: "4:3") {
-                editViewModel.setCropAspectRatio(4.0 / 3.0, imageViewSize: imageViewSize)
+                cropViewModel.setCropAspectRatio(4.0 / 3.0, imageViewSize: imageViewSize)
                 DispatchQueue.main.async {
-                    self.cropRect = editViewModel.cropRect
+                    self.cropRect = cropViewModel.cropRect
                 }
             }
             
             CropOptionButton(optionName: "좌회전") {
-                editViewModel.rotateImageLeft()
+                if cropViewModel.rotateImageLeft(UIImage()) != nil {
+                }
             }
             
             CropOptionButton(optionName: "우회전") {
-                editViewModel.rotateImageRight()
+                if cropViewModel.rotateImageRight(UIImage()) != nil {
+                }
             }
             
             CropOptionButton(optionName: "초기화") {
-                editViewModel.setCropBoxToOriginalAspectRatio(imageViewSize: imageViewSize)
+                cropViewModel.setCropBoxToOriginalAspectRatio(imageViewSize: imageViewSize)
                 DispatchQueue.main.async {
-                    self.cropRect = editViewModel.cropRect
+                    self.cropRect = cropViewModel.cropRect
                 }
                 print("초기화 눌림, cropRect: \(cropRect)")
             }
@@ -47,8 +49,8 @@ struct CropOptionsView: View {
         .frame(maxWidth: .infinity)
         .padding()
         .onChange(of: imageViewSize) { _, newSize in
-            editViewModel.setCropBoxToOriginalAspectRatio(imageViewSize: newSize)
-            self.cropRect = editViewModel.cropRect
+            cropViewModel.setCropBoxToOriginalAspectRatio(imageViewSize: newSize)
+            self.cropRect = cropViewModel.cropRect
         }
     }
 }

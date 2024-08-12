@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AdjustmentView: View {
+struct EditAdjustmentView: View {
     @StateObject var viewModel: AdjustmentViewModel
     @State private var selectedAdjustment: String = "선명도"
     
@@ -41,7 +41,7 @@ struct AdjustmentView: View {
             }
             .frame(maxWidth: .infinity)
             
-            Stepper(value: bindingForSelectedAdjustment(), in: rangeForSelectedAdjustment(), step: 0.5) {
+            Stepper(value: bindingForSelectedAdjustment(), in: rangeForSelectedAdjustment(), step: 0.2) {
                 Text("\(selectedAdjustment): \(bindingForSelectedAdjustment().wrappedValue, specifier: "%.1f")")
                     .foregroundColor(.white)
             }
@@ -82,13 +82,13 @@ struct AdjustmentView: View {
         case "선명도":
             return -10.0...10.0
         case "노출":
-            return -2.0...2.0
+            return -10.0...10.0
         case "생동감":
-            return -1.0...1.0
+            return -10.0...10.0
         case "하이라이트":
-            return 0.0...1.0
+            return -10.0...10.0
         case "밝기":
-            return -1.0...1.0
+            return -10.0...10.0
         case "대비":
             return 0.5...1.5
         case "채도":

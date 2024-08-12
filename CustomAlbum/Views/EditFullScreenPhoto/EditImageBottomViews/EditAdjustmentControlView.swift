@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AdjustmentControlView: View {
+struct EditAdjustmentControlView: View {
     let title: String
     @Binding var value: Double
     let range: ClosedRange<Double>

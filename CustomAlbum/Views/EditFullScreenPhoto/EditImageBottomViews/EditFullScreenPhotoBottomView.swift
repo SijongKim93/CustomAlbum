@@ -7,15 +7,16 @@
 
 import SwiftUI
 
-struct EditBottomView: View {
+struct EditFullScreenPhotoBottomView: View {
     @ObservedObject var viewModel: EditImageViewModel
+    @ObservedObject var filterViewModel: EditFilterViewModel
+    @ObservedObject var cropViewModel: EditCropViewModel
     @ObservedObject var adjustViewModel: AdjustmentViewModel
+    @ObservedObject var blurViewModel: BlurViewModel
     @Binding var cropRect: CGRect
     @Binding var imageViewSize: CGSize
     @Binding var rotationAngle: CGFloat
     
-    
-
 
     var body: some View {
         VStack {
@@ -24,6 +25,9 @@ struct EditBottomView: View {
                     selectedAction: $viewModel.selectedAction,
                     editViewModel: viewModel,
                     adjustViewModel: adjustViewModel,
+                    filterViewModel: filterViewModel,
+                    blurViewModel: blurViewModel,
+                    cropViewModel: cropViewModel,
                     cropRect: $cropRect,
                     imageViewSize: $imageViewSize,
                     rotationAngle: $rotationAngle
@@ -77,7 +81,7 @@ struct EditBottomView: View {
                 
                 Button(action: {
                     withAnimation {
-                        viewModel.toggleDraw()
+                        viewModel.toggleBlur()
                     }
                 }) {
                     VStack {

@@ -49,7 +49,14 @@ struct FavoritesView: View {
             if let index = selectedPhotoIndex {
                 let selectedImage = viewModel.favoritePhotos[index].image
                 let adjustmentViewModel = AdjustmentViewModel(image: selectedImage)
-                let editViewModel = EditImageViewModel(image: selectedImage, adjustmentViewModel: adjustmentViewModel)
+                let editFilterViewModel = EditFilterViewModel()
+                let cropViewModel = EditCropViewModel(image: selectedImage)
+                let editViewModel = EditImageViewModel(
+                    image: selectedImage,
+                    adjustmentViewModel: adjustmentViewModel,
+                    filterViewModel: editFilterViewModel,
+                    cropViewModel: cropViewModel
+                )
                 
                 FullScreenPhotoView(
                     viewModel: FullScreenPhotoViewModel(
@@ -58,7 +65,9 @@ struct FavoritesView: View {
                     ),
                     editViewModel: editViewModel,
                     adjustmentViewModel: adjustmentViewModel,
-                    blurViewModel: BlurViewModel(image: selectedImage)
+                    blurViewModel: BlurViewModel(image: selectedImage),
+                    filterViewModel: editFilterViewModel,
+                    cropViewModel: cropViewModel
                 )
                 .environmentObject(albumViewModel)
                 .onDisappear {
