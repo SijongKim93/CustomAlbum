@@ -31,11 +31,17 @@ class AlbumViewModel: ObservableObject {
     
     // 사용자가 사진 라이브러리에 접근할 수 있는 권한이 있는지 확인하고, 없으면 권한을 요청합니다.
     // 비동기로 권한 상태를 확인하고, 필요한 경우 권한을 요청하는 작업을 수행합니다.
+    
     func checkAndRequestPermission() {
         Task {
             await permissionManager.checkPhotoLibraryPermission()
-            if !isAuthorized {
+            if isAuthorized {
+                await fetchPhotos()
+            } else {
                 await permissionManager.requestPhotoLibraryPermission()
+                if isAuthorized {
+                    await fetchPhotos()
+                }
             }
         }
     }
@@ -78,8 +84,7 @@ class AlbumViewModel: ObservableObject {
      권한 상태 변경될 때 sink를 사용한 이유는 권한 값이 변경될 때 마다 값을 받아와 
      isAuthorized를 업데이트하고 호출해야하는 여러가지 논리적 제어가 필요하기 때문에 sink를 사용했습니다.
      
-     photoLibraryManager를 통해 사진을 가져오는 부분은 단순 사진을 가져와
-     photos 속성에 할당하는 단순한 역할만 수행하기 때문에 assign을 사용했습니다.
+     photoLibraryManager를 통해 사진을 가져오는 부분은 단순 사진을 가져와 photos 속성에 할당하는 단순한 역할만 수행하기 때문에 assign을 사용했습니다.
      */
     private func setupBindings() {
         // 권한 상태가 변경될 때 UI에 반영하도록 바인딩합니다.

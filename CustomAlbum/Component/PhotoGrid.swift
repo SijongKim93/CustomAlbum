@@ -23,8 +23,7 @@ struct PhotoGrid<PhotoType: Identifiable & Hashable>: View {
                     if let image = imageForPhoto(photos[index]) {
                         PhotoGridItem(
                             photo: image,
-                            isSelected: selectedPhotoIndex == index,
-                            isFavorite: isFavorite(photos[index])
+                            isSelected: selectedPhotoIndex == index
                         )
                         .aspectRatio(1, contentMode: .fit)
                         .onTapGesture {
