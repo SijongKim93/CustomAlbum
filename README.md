@@ -2,6 +2,11 @@
 
 2024.08.07 ~ 2024.08.13 진행한 픽소 iOS 과제 전형 입니다.
 
+![조정,블러](https://github.com/user-attachments/assets/5f8da2c2-2bc6-459e-b9b3-721e6e20706d) ![풀스크린뷰](https://github.com/user-attachments/assets/2701678b-b34b-4e9d-81ef-3cd7adc0150a) ![필터, 자르기](https://github.com/user-attachments/assets/d085729e-e034-48e2-99b5-f1dc1b07e192)
+
+
+
+
 ## 1. 프로젝트 설명
 
 ### Custom Album
@@ -24,21 +29,20 @@
 
 ### 2. AlbumView와 FavoriteView가 하나의 FullScreenPhotoView를 공유하면서 발생하는 타입 불일치 오류
 
+![image](https://github.com/user-attachments/assets/3e9abdc0-2acf-480c-8a89-3a338a0333b6)
+
+
 - **문제**: 각각의 사진을 가지고 있는 뷰에서 사진 클릭 후 FullScreenPhotoView로 넘어갈 때 Photo와 Favorite의 배열이 서로 다른 타입으로 저장되어 있어 타입 불일치 오류가 발생했습니다.
 - **해결**: Favorite의 값을 Photo에 매치해 타입을 일치시키는 방식으로 오류를 수정했습니다.
 
 ### 3. 이미지 편집 중 필터, 조정, 자르기, 블러 등 각각의 이미지 편집 과정에서 발생하는 충돌
 
+![image](https://github.com/user-attachments/assets/b318240b-795e-4c94-a867-396a3b4333b4)
+
 - **문제**: 각 이미지 편집 기능이 충돌하여, 편집된 이미지가 아닌 원본 이미지가 저장되는 문제와 다른 편집 기능이 작동하지 않는 오류가 있었습니다.
 - **해결**: 각 편집 과정에서 적용되는 이미지를 개별적으로 관리하도록 설정했습니다. 기능별로 뷰 모델을 분리하여 각 이미지 편집 결과를 독립적으로 관리하고, 최종 이미지를 통합하여 전달하는 방식으로 로직을 수정했습니다.
 
 ## 3. 주요 기능
-
-![Filter and Crop](https://prod-files-secure.s3.us-west-2.amazonaws.com/2f8e0744-8494-4947-96ed-cb4bcb82bc77/e1d80ea9-3c28-47b0-a107-a5ebada9a9d1/%E1%84%91%E1%85%B5%E1%86%AF%E1%84%90%E1%85%A5_%E1%84%8C%E1%85%A1%E1%84%85%E1%85%B3%E1%84%80%E1%85%B5.gif)
-
-![Adjustment and Blur](https://prod-files-secure.s3.us-west-2.amazonaws.com/2f8e0744-8494-4947-96ed-cb4bcb82bc77/74ea4d80-9203-48b4-99bf-0058b177b3a4/%E1%84%8C%E1%85%A9%E1%84%8C%E1%85%A5%E1%86%BC%E1%84%87%E1%85%B3%E1%86%AF%E1%84%85%E1%85%A5.gif)
-
-![FullScreen View](https://prod-files-secure.s3.us-west-2.amazonaws.com/2f8e0744-8494-4947-96ed-cb4bcb82bc77/59a8bb1f-5287-4058-94d3-31060e927fc4/%E1%84%91%E1%85%AE%E1%86%AF%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%87%E1%85%B2.gif)
 
 ### 1. 사진 동기화
 
@@ -93,10 +97,12 @@
 
 ## 6. GitHub
 
-![GitHub Repository](https://prod-files-secure.s3.us-west-2.amazonaws.com/2f8e0744-8494-4947-96ed-cb4bcb82bc77/2514260b-f0cd-43d3-906b-d7f559f3eb4a/image.png)
+![image](https://github.com/user-attachments/assets/2462cb96-0d7f-40dc-82b7-12e3b4eedeec)
+
 
 - Private repository를 통해 각 상황별 개발 진행 과정을 기록했습니다.
 
-![Branching Strategy](https://prod-files-secure.s3.us-west-2.amazonaws.com/2f8e0744-8494-4947-96ed-cb4bcb82bc77/36957b42-9582-4cd4-a02a-d62e87c46a18/image.png)
+![image](https://github.com/user-attachments/assets/bc475bf3-c83f-4550-8d3d-aeb99681d02e)
+
 
 - 기능 구현 별로 브랜치를 나눠 해당 기능을 구현하고, 각 브랜치에 대한 히스토리를 관리했습니다.
