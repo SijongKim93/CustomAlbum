@@ -40,15 +40,11 @@ struct AlbumView: View {
         }
         .task {
             viewModel.checkAndRequestPermission()
-        } // 사진첩 접근 권한을 확인하고 요청하는 작업을 수행합니다.
+        }
         .onAppear {
             if viewModel.isAuthorized {
                 viewModel.fetchPhotosIfAuthorized()
             }
-            viewModel.refreshPhotos()
-        } // 뷰가 나타날 때 사진을 가져오는 로직입니다.
-        .onChange(of: selectedPhotoIndex) { newValue, oldValue in
-            viewModel.refreshPhotos()
-        } // 선택된 사진의 인덱스가 변경될 때마다 즉, 사진의 삭제 및 저장될 때 사진을 새로 고치는 로직입니다.
+        }
     }
 }

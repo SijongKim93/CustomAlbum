@@ -29,9 +29,3 @@ struct DeniedView: View {
     }
 }
 
-
-struct DeniedView_Previews: PreviewProvider {
-    static var previews: some View {
-        DeniedView(requestPermission: {})
-    }
-}

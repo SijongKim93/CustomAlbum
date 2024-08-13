@@ -33,7 +33,7 @@ struct InfoView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .background(Color.primary)
+        .background(Color.black)
         .padding()
     }
 }
