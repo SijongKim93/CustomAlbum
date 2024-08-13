@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct FullScreenPhotoView: View {
+    /*
+     AlbumViewModel은 탭 간 사진 값 변화를 감지하고 처리하기 위해 CustomAlbumApp에 선언하여 활용하도록 구현되었습니다.
+     그로인해 추가 다른 view에서 AlbumViewModel에 접근하기 위해 EnviromentObject를 활용하였습니다.
+     
+     FullScreenPhotoViewModel은 현재 표시되는 사진에 대한 정보, 상태를 관리합니다.
+     */
     @EnvironmentObject var albumViewModel: AlbumViewModel
-    
     @ObservedObject var viewModel: FullScreenPhotoViewModel
     @ObservedObject var editViewModel: EditImageViewModel
     @ObservedObject var adjustmentViewModel: EditAdjustmentViewModel
@@ -17,36 +22,21 @@ struct FullScreenPhotoView: View {
     @ObservedObject var filterViewModel: EditFilterViewModel
     @ObservedObject var cropViewModel: EditCropViewModel
     @StateObject private var zoomHandler = PhotoZoomHandler()
+    
     @State private var isEditing = false
     @Namespace private var animation
     @Environment(\.presentationMode) var presentationMode
     
+    // 현재 표시할 이미지를 결정하는 속성입니다.
     private var displayedImage: UIImage {
-        var finalImage = viewModel.currentPhoto.image
-        
-        if editViewModel.selectedAction == .adjustment, let adjustedImage = adjustmentViewModel.adjustedImage {
-            finalImage = adjustedImage
-        }
-        
-        if editViewModel.selectedAction == .filter, let filteredImage = filterViewModel.filteredImage {
-            finalImage = filteredImage
-        }
-        
-        if editViewModel.selectedAction == .blur, let blurredImage = blurViewModel.bluredImage {
-            finalImage = blurredImage
-        }
-        
-        if editViewModel.selectedAction == .crop, cropViewModel.cropApplied {
-            finalImage = cropViewModel.applyActionCrop(with: cropViewModel.cropRect, imageViewSize: CGSize.zero, to: finalImage) ?? finalImage
-        }
-        
-        return finalImage
+        return viewModel.currentPhoto.image
     }
     
+    // 사진 회전 각도를 결정하는 계산 속성입니다. 회전 각도는 편집 뷰에서만 적용되고, 여기서는 초기 각도를 사용합니다.
     private var rotationAngle: CGFloat {
-        return cropViewModel.rotationAngle
+        return 0
     }
-
+    
     var body: some View {
         ZStack {
             VStack {
@@ -70,7 +60,7 @@ struct FullScreenPhotoView: View {
                                 .onEnded { value in
                                     zoomHandler.magnificationEnded(value)
                                 }
-                        )
+                        ) // 줌 제스처를 추가해 이미지 확대 및 축소를 제어합니다.
                         .position(x: geometry.size.width / 2, y: geometry.size.height / 2 - 20)
                     
                     if viewModel.showInfoView {
@@ -80,7 +70,7 @@ struct FullScreenPhotoView: View {
                             .transition(.move(edge: .bottom))
                             .animation(.easeInOut(duration: 0.4), value: viewModel.showInfoView)
                             .offset(y: imageHeight)
-                    }
+                    } // showInfoView가 toggle되면 infoView를 호출합니다.
                 }
                 Spacer()
             }
@@ -102,7 +92,7 @@ struct FullScreenPhotoView: View {
                         viewModel.toggleDeletePhoto()
                     },
                     isFavorite: viewModel.currentPhoto.isFavorite
-                )
+                ) // FullScreenPhotoView 하단 사진공유, 즐겨찾기, 정보, 삭제 기능을 제공하는 뷰 입니다.
                 .transition(.move(edge: .bottom))
                 .animation(.easeInOut(duration: 0.4), value: isEditing)
             }
@@ -123,7 +113,7 @@ struct FullScreenPhotoView: View {
                     isEditing: $isEditing
                 )
                 .gesture(DragGesture().onChanged { _ in })
-            }
+            } // 편집 버튼을 눌러 isEditing이 true가 되면 EditFullScreenPhotoView를 호출합니다.
         }
         .background(Color.black.edgesIgnoringSafeArea(.all))
         .navigationBarTitleDisplayMode(.inline)
@@ -133,7 +123,7 @@ struct FullScreenPhotoView: View {
                 albumViewModel.removePhoto(by: viewModel.currentPhoto.id)
                 presentationMode.wrappedValue.dismiss()
             }
-        }
+        } // shouldDismiss가 true가 되면 현재 화면을 닫고, 사진을 제거합니다.
         .gesture(
             isEditing ? DragGesture().onChanged { _ in } : nil
         )

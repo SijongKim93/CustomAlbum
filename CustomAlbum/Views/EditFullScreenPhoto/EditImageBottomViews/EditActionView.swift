@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// 편집 작업의 종류를 정의했습니다.
 enum EditAction {
     case filter
     case crop
@@ -20,11 +21,15 @@ struct EditActionView: View {
     @ObservedObject var adjustViewModel: EditAdjustmentViewModel
     @ObservedObject var filterViewModel: EditFilterViewModel
     @ObservedObject var blurViewModel: EditBlurViewModel
-    @ObservedObject var cropViewModel: EditCropViewModel // 추가된 부분
+    @ObservedObject var cropViewModel: EditCropViewModel
     @Binding var cropRect: CGRect
     @Binding var imageViewSize: CGSize
     @Binding var rotationAngle: CGFloat
-
+    
+    /*
+     현재 편집 중인 이미지를 가져오는 계산 속성입니다.
+     편집 과정 중 각각의 상황별 이미지 적용 시 충돌 이슈가 있어 각각의 편집값이 제대로 들어갈 수 있도록 구현했습니다.
+     */
     private var currentImage: UIImage {
         var finalImage = editViewModel.originalImage
         
@@ -62,7 +67,7 @@ struct EditActionView: View {
                         .foregroundColor(.white)
                         .padding()
                 }
-            }
+            } // 편집 작업에 따라 관련 뷰를 표시 할 수 있도록 각각 해당 부분이 실행되도록 구현했습니다.
         }
         .frame(maxWidth: .infinity)
         .background(Color.black)
