@@ -12,7 +12,8 @@ struct FavoritesView: View {
     @EnvironmentObject var albumViewModel: AlbumViewModel
     @StateObject private var viewModel = FavoritesViewModel()
     @Namespace private var animation
-    @State private var selectedPhotoIndex: Int?
+    
+    @State private var selectedPhotoIndex: Int? // 사용자가 선택한 사진의 인덱스를 추적합니다.
     
     private let columns = [
         GridItem(.flexible(), spacing: 1),
@@ -38,10 +39,10 @@ struct FavoritesView: View {
         }
         .onAppear {
             viewModel.loadFavoritePhotos()
-        }
+        } // 뷰가 나타날 때 즐겨찾기 된 사진을 가져오는 로직입니다.
         .onChange(of: selectedPhotoIndex) { newValue, oldValue in
             viewModel.refreshFavoritePhotos()
-        }
+        } // 선택된 사진의 인덱스가 변경될 때(사진 추가 및 삭제 등) 사진을 새로 가져옵니다.
         .navigationDestination(isPresented: Binding(
             get: { selectedPhotoIndex != nil },
             set: { if !$0 { selectedPhotoIndex = nil } }
@@ -71,7 +72,7 @@ struct FavoritesView: View {
                     cropViewModel: cropViewModel
                 )
                 .environmentObject(albumViewModel)
-            }
+            } // 선택된 사진을 FullScreenPhotoView에 보이도록 하는 로직입니다.
         }
     }
 }

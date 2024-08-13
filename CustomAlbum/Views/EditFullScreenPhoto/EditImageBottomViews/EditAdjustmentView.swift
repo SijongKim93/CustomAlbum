@@ -41,16 +41,12 @@ struct EditAdjustmentView: View {
             }
             .frame(maxWidth: .infinity)
             
-            Stepper(value: bindingForSelectedAdjustment(), in: rangeForSelectedAdjustment(), step: 0.2) {
-                Text("\(selectedAdjustment): \(bindingForSelectedAdjustment().wrappedValue, specifier: "%.1f")")
-                    .foregroundColor(.white)
-            }
-            .accentColor(Color(UIColor.systemIndigo))
-            .onChange(of: bindingForSelectedAdjustment().wrappedValue) { _, newValue in
-                print("\(selectedAdjustment) 값: \(newValue)")
-                viewModel.applyToCurrentImage()
-            }
-            .padding()
+            Slider(value: bindingForSelectedAdjustment(), in: rangeForSelectedAdjustment(), step: 0.1)
+                .accentColor(Color(UIColor.systemIndigo))
+                .onChange(of: bindingForSelectedAdjustment().wrappedValue) { _, newValue in
+                    viewModel.applyToCurrentImage()
+                }
+                .padding()
         }
         .padding(.vertical, 10)
         .background(Color.black)

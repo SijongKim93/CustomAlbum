@@ -10,7 +10,7 @@ import SwiftUI
 struct AlbumView: View {
     @EnvironmentObject var viewModel: AlbumViewModel
     @Namespace private var animation
-    @State private var selectedPhotoIndex: Int?
+    @State private var selectedPhotoIndex: Int? // 사용자가 선택한 사진의 인덱스를 추적합니다.
     @Binding var tabSelection: Int
 
     private let columns = [
@@ -28,7 +28,7 @@ struct AlbumView: View {
                 animation: animation,
                 onScrolledToEnd: { photo in
                     viewModel.loadMoreIfNeeded(currentItem: photo)
-                },
+                }, // onScrolledToEnd를 활용해 스크롤 끝에 도착했을 때 추가 사진을 로드하는 로직입니다.
                 imageForPhoto: { photo in
                     photo.image
                 },
@@ -40,15 +40,15 @@ struct AlbumView: View {
         }
         .task {
             viewModel.checkAndRequestPermission()
-        }
+        } // 사진첩 접근 권한을 확인하고 요청하는 작업을 수행합니다.
         .onAppear {
             if viewModel.isAuthorized {
                 viewModel.fetchPhotosIfAuthorized()
             }
             viewModel.refreshPhotos()
-        }
+        } // 뷰가 나타날 때 사진을 가져오는 로직입니다.
         .onChange(of: selectedPhotoIndex) { newValue, oldValue in
             viewModel.refreshPhotos()
-        }
+        } // 선택된 사진의 인덱스가 변경될 때마다 즉, 사진의 삭제 및 저장될 때 사진을 새로 고치는 로직입니다.
     }
 }

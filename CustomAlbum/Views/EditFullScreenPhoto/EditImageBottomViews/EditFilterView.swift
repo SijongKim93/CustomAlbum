@@ -77,7 +77,7 @@ struct EditFilterView: View {
                     },
                     image: editFilterViewModel.applyPreviewFilter(filterName: "CIVignette", to: image)
                 )
-            }
+            } // 적용한 필터를 나열하고 각 필터를 선택할 수 있도록 구현했습니다.
             .padding(.horizontal)
         }
     }

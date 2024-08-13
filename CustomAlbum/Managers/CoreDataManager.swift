@@ -13,12 +13,15 @@ class CoreDataManager {
     
     private let persistentContainer: NSPersistentContainer
     
+    @Published var showAlert = false
+    @Published var alertMessage = ""
+    
     private init() {
         persistentContainer = NSPersistentContainer(name: "Favorite")
         persistentContainer.loadPersistentStores { _, error in
             if error != nil {
-                fatalError("즐겨찾기 사진 저장 실패")
-                // 이용자에게 알려줄 수 있도록 예외 처리
+                self.alertMessage = "즐겨찾기 사진 저장 실패"
+                self.showAlert = true
             }
         }
     }
@@ -27,6 +30,7 @@ class CoreDataManager {
         return persistentContainer.viewContext
     }
     
+    // 데이터 변경사항을 저장하는 로직을 담당합니다.
     func saveContext() {
         let context = persistentContainer.viewContext
         if context.hasChanges {
@@ -34,11 +38,13 @@ class CoreDataManager {
                 try context.save()
             } catch {
                 let nserror = error as NSError
-                fatalError("\(nserror), \(nserror.userInfo)")
+                self.alertMessage = "데이터 저장 실패: \(nserror.localizedDescription)"
+                self.showAlert = true
             }
         }
     }
     
+    // 별을 눌러 즐겨찾기 추가 시 사진을 저장하는 로직을 담당합니다.
     func saveFavoritePhoto(id: String, image: UIImage, date: Date?, location: String?, assetIdentifier: String) {
         let entity = Favorite(context: context)
         entity.id = id
@@ -51,6 +57,7 @@ class CoreDataManager {
         saveContext()
     }
     
+    // 즐겨찾기 내 사진 삭제 시 해당하는 ID를 확인해 삭제하도록 구현했습니다.
     func deleteFavoritePhoto(by id: String) {
         let request: NSFetchRequest<Favorite> = Favorite.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id)
@@ -62,20 +69,24 @@ class CoreDataManager {
                 saveContext()
             }
         } catch {
-            print("Error deleting favorite photo: \(error)")
+            self.alertMessage = "즐겨찾기 사진 삭제 중 오류 발생: \(error.localizedDescription)"
+            self.showAlert = true
         }
     }
     
+    // 모든 즐겨찾기 된 사진을 가져와 페치하는 로직을 담당합니다.
     func fetchFavoritePhotos() -> [Favorite] {
         let request: NSFetchRequest<Favorite> = Favorite.fetchRequest()
         do {
             return try context.fetch(request)
         } catch {
-            print("Error fetching favorite photos: \(error)")
+            self.alertMessage = "즐겨찾기 사진 가져오기 중 오류 발생: \(error.localizedDescription)"
+            self.showAlert = true
             return []
         }
     }
     
+    // 특정 ID가 즐겨찾기 사진인지 확인하는 로직을 담당합니다.
     func isFavoritePhoto(id: String) -> Bool {
         let request: NSFetchRequest<Favorite> = Favorite.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id)
@@ -85,7 +96,8 @@ class CoreDataManager {
             let result = try context.fetch(request)
             return !result.isEmpty
         } catch {
-            print("Error fetching favorite status: \(error)")
+            self.alertMessage = "즐겨찾기 상태 확인 중 오류 발생: \(error.localizedDescription)"
+            self.showAlert = true
             return false
         }
     }

@@ -7,20 +7,23 @@
 
 import SwiftUI
 
+
 class EditCropViewModel: ObservableObject {
-    @Published var cropRect: CGRect = .zero
-    @Published var cropApplied: Bool = false
-    @Published var rotationAngle: CGFloat = 0.0
-    @Published var isCropBoxVisible: Bool = true
-    @Published var croppedImage: UIImage?
+    @Published var cropRect: CGRect = .zero // 자르기 영역을 나타내는 CGRect입니다.
+    @Published var cropApplied: Bool = false // 자르기 작업이 적용되었는지 여부를 나타냅니다.
+    @Published var rotationAngle: CGFloat = 0.0 // 이미지의 회전 각도를 나타냅니다.
+    @Published var isCropBoxVisible: Bool = true // 자르기 박스가 보이는지 여부를 나타냅니다.
+    @Published var croppedImage: UIImage? // 자르기 작업이 적용된 이미지를 저장합니다.
     var image: UIImage
     
-    private let cropService = ImageCropService()
+    private let cropService = ImageCropService() // 자르기 작업을 담당하는 서비스를 가져와 사용합니다.
     
     init(image: UIImage) {
         self.image = image
     }
     
+    // MARK: - 자르기 적용
+    // 자르기 작업을 수행 후, 자른 이미지를 반환합니다.
     func applyActionCrop(with rect: CGRect, imageViewSize: CGSize, to image: UIImage) -> UIImage? {
         let scaleX = image.size.width / imageViewSize.width
         let scaleY = image.size.height / imageViewSize.height
@@ -38,6 +41,7 @@ class EditCropViewModel: ObservableObject {
         return image
     }
     
+    // 이미지를 정사각형으로 자르는 메서드입니다.
     func cropToSquare(_ image: UIImage) -> UIImage? {
         if let croppedImage = cropService.cropImageToSquare(image) {
             cropApplied = true
@@ -46,11 +50,13 @@ class EditCropViewModel: ObservableObject {
         return image
     }
     
+    // 자르기 작업을 초기 상태로 되돌립니다.
     func resetCrop(to originalImage: UIImage) {
         cropRect = CGRect(x: 0, y: 0, width: originalImage.size.width, height: originalImage.size.height)
         rotationAngle = 0.0
     }
     
+    // 자르기 박스의 비율을 설정하고, 화면 크기에 맞게 조정합니다.
     func setCropAspectRatio(_ aspectRatio: CGFloat, imageViewSize: CGSize) {
         let padding: CGFloat = 20
         let maxWidth = imageViewSize.width - (padding * 2)
@@ -59,7 +65,7 @@ class EditCropViewModel: ObservableObject {
         var width: CGFloat
         var height: CGFloat
         
-        if aspectRatio > 1 {
+        if (aspectRatio > 1) {
             width = min(maxWidth, maxHeight * aspectRatio)
             height = width / aspectRatio
         } else {
@@ -75,6 +81,7 @@ class EditCropViewModel: ObservableObject {
         )
     }
     
+    // 자르기 박스를 원래의 비율로 설정합니다.
     func setCropBoxToOriginalAspectRatio(imageViewSize: CGSize) {
         cropRect = CGRect(
             x: 0,
@@ -84,6 +91,7 @@ class EditCropViewModel: ObservableObject {
         )
     }
     
+    // 자르기 작업을 적용하고, 자른 이미지를 저장합니다.
     func applyCrop(imageViewSize: CGSize) {
         if let croppedImage = crop(image: image, cropArea: cropRect, imageViewSize: imageViewSize) {
             self.croppedImage = croppedImage
@@ -92,13 +100,15 @@ class EditCropViewModel: ObservableObject {
         }
     }
     
+    // 자르기 박스를 초기화하고, 자르기 작업을 되돌립니다.
     func resetCropBox(imageViewSize: CGSize) {
         setCropBoxToOriginalAspectRatio(imageViewSize: imageViewSize)
-            self.cropApplied = false
-            self.isCropBoxVisible = true
-            self.croppedImage = nil
+        self.cropApplied = false
+        self.isCropBoxVisible = true
+        self.croppedImage = nil
     }
     
+    // 이미지 자르기 작업을 수행하는 내부 메서드입니다.
     private func crop(image: UIImage, cropArea: CGRect, imageViewSize: CGSize) -> UIImage? {
         let scaleX = image.size.width / imageViewSize.width * image.scale
         let scaleY = image.size.height / imageViewSize.height * image.scale
@@ -116,6 +126,7 @@ class EditCropViewModel: ObservableObject {
         return UIImage(cgImage: cutImageRef)
     }
     
+    // 자르기 박스를 이미지 크기에 맞게 초기화합니다.
     func initializeCropBox(for imageSize: CGSize, in viewSize: CGSize) {
         let imageAspectRatio = imageSize.width / imageSize.height
         let viewAspectRatio = viewSize.width / viewSize.height
@@ -127,7 +138,6 @@ class EditCropViewModel: ObservableObject {
             cropWidth = viewSize.width
             cropHeight = viewSize.width / imageAspectRatio
         } else {
-            
             cropHeight = viewSize.height
             cropWidth = viewSize.height * imageAspectRatio
         }
@@ -139,23 +149,25 @@ class EditCropViewModel: ObservableObject {
         self.isCropBoxVisible = true
     }
     
-    // MARK: - Rotate 적용
+    // MARK: - 이미지 회전 적용
     
+    // 이미지를 오른쪽으로 90도 회전시키는 메서드입니다.
     func rotateImageRight(_ image: UIImage) -> UIImage? {
         rotationAngle += 90
         if rotationAngle >= 360 { rotationAngle = 0 }
         return applyRotation(to: image)
     }
 
+    // 이미지를 왼쪽으로 90도 회전시키는 메서드입니다.
     func rotateImageLeft(_ image: UIImage) -> UIImage? {
         rotationAngle -= 90
         if rotationAngle < 0 { rotationAngle += 360 }
         return applyRotation(to: image)
     }
 
+    // 이미지의 회전을 적용하는 내부 메서드입니다.
     func applyRotation(to image: UIImage) -> UIImage? {
         guard let cgImage = image.cgImage else {
-            print("회전 적용 실패: filteredImage가 없음")
             return nil
         }
         let newOrientation: UIImage.Orientation = rotationAngle == 90 ? .right :
