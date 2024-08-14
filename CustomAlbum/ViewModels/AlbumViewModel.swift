@@ -99,10 +99,19 @@ class AlbumViewModel: ObservableObject {
             }
             .store(in: &cancellables)
         
-        // 사진 라이브러리 매니저에서 가져온 사진 데이터를 ViewModel의 photos 배열에 할당합니다.
+        // 사진 라이브러리 매니저에서 가져온 사진 데이터를 ViewModel의 photos 배열에 할당하고, 상태 변화를 처리합니다.
         photoLibraryManager.$photos
             .receive(on: DispatchQueue.main)
-            .assign(to: \.photos, on: self)
+            .sink { [weak self] newPhotos in
+                guard let self = self else { return }
+                self.photos = newPhotos
+                
+                // 여기에서 추가 작업을 수행할 수 있습니다.
+                // 예를 들어, 데이터가 변경될 때마다 특정 작업을 실행할 수 있습니다.
+                Task { @MainActor in
+                    self.refreshPhotos()
+                } // 데이터가 변경될 때마다 사진을 새로 고침합니다.
+            }
             .store(in: &cancellables)
     }
     
