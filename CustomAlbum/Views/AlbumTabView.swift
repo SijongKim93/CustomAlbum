@@ -26,6 +26,13 @@ struct AlbumTabView: View {
                         Text("Favorite")
                     }
                     .tag(1)
+                
+                CameraView()
+                    .tabItem {
+                        Image(systemName: "camera")
+                        Text("Camera")
+                    }
+                    .tag(2)
             }
             .accentColor(Color(UIColor.systemIndigo))
         }
