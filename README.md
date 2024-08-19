@@ -1,6 +1,4 @@
-# **픽소 iOS 과제 - 김시종**
-
-2024.08.07 ~ 2024.08.13 진행한 픽소 iOS 과제 전형 입니다.
+# **Custom Album**
 
 <img src="https://github.com/user-attachments/assets/5f8da2c2-2bc6-459e-b9b3-721e6e20706d" width="200" height="400"/>  <img src="https://github.com/user-attachments/assets/2701678b-b34b-4e9d-81ef-3cd7adc0150a" width="200" height="400"/>  <img src="https://github.com/user-attachments/assets/d085729e-e034-48e2-99b5-f1dc1b07e192" width="200" height="400"/> 
 
