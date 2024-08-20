@@ -93,7 +93,6 @@
 - 권한이 승인되지 않은 경우, `openSettingsURLString`을 사용해 권한을 다시 승인할 수 있도록 유도하는 방식으로 구현했습니다.
 
 ## 6. GitHub
-
 ![image](https://github.com/user-attachments/assets/2462cb96-0d7f-40dc-82b7-12e3b4eedeec)
 
 
