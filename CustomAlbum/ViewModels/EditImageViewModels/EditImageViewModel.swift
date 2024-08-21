@@ -48,7 +48,6 @@ class EditImageViewModel: ObservableObject {
     
     // MARK: - 이미지 저장
     
-    // 편집된 이미지를 사진에 저장하는 메서드입니다.
     func saveEditedImage(editedImage: UIImage, completion: @escaping (Bool) -> Void) {
         isSaving = true // 저장 작업이 시작되었음을 표시합니다.
         saveError = nil // 이전 오류 메시지를 초기화합니다.
