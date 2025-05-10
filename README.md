@@ -99,6 +99,3 @@
 - Private repository를 통해 각 상황별 개발 진행 과정을 기록했습니다.
 
 ![image](https://github.com/user-attachments/assets/bc475bf3-c83f-4550-8d3d-aeb99681d02e)
-
-
-- 기능 구현 별로 브랜치를 나눠 해당 기능을 구현하고, 각 브랜치에 대한 히스토리를 관리했습니다.
